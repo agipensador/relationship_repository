@@ -1,8 +1,13 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/theme/app_text_styles.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_image_header.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:love_relationship/shared/widgets/clickable_button.dart';
+import 'package:love_relationship/shared/widgets/primary_button.dart';
+import 'package:love_relationship/shared/widgets/secondary_button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -24,7 +29,9 @@ class LoginPage extends StatelessWidget {
             AuthTextField(controller: emailController, hint: 'Email'),
             const SizedBox(height: 16),
             AuthTextField(controller: passwordController, hint: 'Senha', obscure: true),
-            const SizedBox(height: 24),
+            const SizedBox(height: 4),
+            Align(alignment: Alignment.centerRight, child: ClickableButton(text: 'Esqueci a senha', onPressed: () => Navigator.pushNamed(context, '/register'))),
+            const SizedBox(height: 16),
             //BLoC
             BlocConsumer<LoginCubit, LoginState>(
               listener: (context, state){
@@ -40,19 +47,20 @@ class LoginPage extends StatelessWidget {
                 return state is LoginLoading ? CircularProgressIndicator()
                  : Column(
                     children: [
-                      ElevatedButton(
+                      PrimaryButton(
+                        text: 'Entrar',
                         onPressed: () {
                           context.read<LoginCubit>().login(
-                                emailController.text.trim(),
-                                passwordController.text.trim(),
-                              );
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                          );
                         },
-                        child: const Text('Entrar'),
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/register'),
-                        child: const Text('Criar cadastro'),
-                      )
+                      SizedBox(height: 16),
+                      SecondaryButton(
+                        text: 'Criar cadastro',
+                        onPressed:  () => Navigator.pushNamed(context, '/register')
+                      ),
                     ],
                   );
               })
