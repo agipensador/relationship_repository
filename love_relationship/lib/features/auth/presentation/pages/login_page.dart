@@ -1,7 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:love_relationship/core/theme/app_text_styles.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_image_header.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
@@ -40,7 +38,7 @@ class LoginPage extends StatelessWidget {
                     SnackBar(content: Text(state.message)),
                   );
                 } else if (state is LoginSuccess) {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushReplacementNamed(context, '/home', arguments: state);
                   }
               },
               builder: (context, state){
@@ -58,7 +56,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       SecondaryButton(
-                        text: 'Criar cadastro',
+                        text: 'Criar conta',
                         onPressed:  () => Navigator.pushNamed(context, '/register')
                       ),
                     ],

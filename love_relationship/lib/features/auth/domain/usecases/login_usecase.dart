@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:love_relationship/core/error/failure.dart';
-import 'package:love_relationship/features/auth/domain/entities/user.dart';
+import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
 import 'package:love_relationship/features/auth/domain/repositories/login_repository.dart';
 
 class LoginUseCase {
@@ -8,7 +8,7 @@ class LoginUseCase {
 
   LoginUseCase(this.repository);
 
-  Future<Either<Failure, User>> call(String email, String senha){
+  Future<Either<Failure, UserEntity>> call(String email, String senha){
     return repository.loginWithEmail(email, senha);
   }
 

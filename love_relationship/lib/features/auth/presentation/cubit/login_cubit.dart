@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:love_relationship/features/auth/domain/entities/user.dart';
+import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
 import 'package:love_relationship/features/auth/domain/usecases/login_usecase.dart';
 
 part 'login_state.dart';
