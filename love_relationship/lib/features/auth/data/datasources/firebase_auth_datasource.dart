@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/auth/data/datasources/auth_datasource.dart';
 import 'package:love_relationship/features/auth/data/models/user_model.dart';
@@ -25,7 +26,7 @@ class FirebaseAuthDatasource implements AuthDatasource  {
       // await result.user?.updateDisplayName(name);
 
       final user = result.user;
-      if (user == null) throw AuthFailure('Erro ao criar usuário');
+      if (user == null) throw AuthFailure(AppStrings.createUserError);
 
       await user.updateDisplayName(name);
       await user.reload();
@@ -38,11 +39,6 @@ class FirebaseAuthDatasource implements AuthDatasource  {
 
     return userModel;
 
-    //   return  UserEntity(
-    //   id: result.user?.uid ?? '',
-    //   email: result.user?.email ?? '',
-    //   name: name,
-    // );
   }
   
   @override
@@ -53,7 +49,7 @@ class FirebaseAuthDatasource implements AuthDatasource  {
       email: email, password: password);
 
     final user = result.user;
-    if (user == null) throw AuthFailure('Usuário não encontrado');
+    if (user == null) throw AuthFailure(AppStrings.userNotFound);
     print('gio: login ${user.displayName}');
 
     await user.reload();

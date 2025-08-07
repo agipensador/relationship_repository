@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
@@ -50,22 +51,25 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 24),
                 state.isLoading ? CircularProgressIndicator() : 
                 PrimaryButton(
+                  key: const Key('register_button'),
                   text: 'Cadastrar',
                   onPressed: () async {
                     final user = await context.read<RegisterCubit>()
-                    .register(nameRC: nameController.text,
-                     emailRC: emailController.text, passwordRC: passController.text);
+                    .register(
+                      nameRC: nameController.text,
+                      emailRC: emailController.text, 
+                      passwordRC: passController.text);
 
                      if(user != null && context.mounted){
-                      Navigator.pushReplacementNamed(context, '/home');
+                      Navigator.pushReplacementNamed(context, AppStrings.homeRoute);
                      }
                   }),
                 const SizedBox(height: 16),
                 SecondaryButton(
                   text: 'Voltar',
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.pop(context);
-                  },
+                    }
                 ),
               ],
             ),

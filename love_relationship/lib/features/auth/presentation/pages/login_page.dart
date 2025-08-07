@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_image_header.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
@@ -17,7 +18,6 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        
         child: SingleChildScrollView(padding: EdgeInsets.all(16),
           child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
                     SnackBar(content: Text(state.message)),
                   );
                 } else if (state is LoginSuccess) {
-                    Navigator.pushReplacementNamed(context, '/home', arguments: state);
+                    Navigator.pushReplacementNamed(context, AppStrings.homeRoute, arguments: state);
                   }
               },
               builder: (context, state){
@@ -46,18 +46,18 @@ class LoginPage extends StatelessWidget {
                  : Column(
                     children: [
                       PrimaryButton(
-                        text: 'Entrar',
-                        onPressed: () {
+                        key: Key('login_button'),
+                        text: AppStrings.btnAccess,
+                        onPressed: () =>
                           context.read<LoginCubit>().login(
                             emailController.text.trim(),
                             passwordController.text.trim(),
-                          );
-                        },
+                          )
                       ),
                       SizedBox(height: 16),
                       SecondaryButton(
-                        text: 'Criar conta',
-                        onPressed:  () => Navigator.pushNamed(context, '/register')
+                        text: AppStrings.btnRegister, 
+                        onPressed:  () => Navigator.pushNamed(context, AppStrings.registerRoute)
                       ),
                     ],
                   );

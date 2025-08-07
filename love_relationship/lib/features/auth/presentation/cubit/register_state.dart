@@ -1,5 +1,7 @@
 part of 'register_cubit.dart';
 
+class RegisterInitial extends RegisterState{}
+
 class RegisterState {
   final bool isLoading;
   final String? errorMessage;

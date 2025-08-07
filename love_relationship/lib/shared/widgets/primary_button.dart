@@ -5,7 +5,7 @@ import 'package:love_relationship/core/theme/app_text_styles.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final Future<void> Function() onPressed;
 
   const PrimaryButton({
     required this.text,
@@ -29,7 +29,7 @@ class PrimaryButton extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        onPressed: onPressed,
+        onPressed: () => onPressed(),
         child: Text(text, style: AppTextStyles.primaryButtonText),
       ),
     );

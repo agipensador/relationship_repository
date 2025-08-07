@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:love_relationship/core/services/firebase_storage_service.dart';
+import 'package:love_relationship/core/services/storage_service.dart';
 import 'package:love_relationship/features/auth/data/datasources/auth_datasource.dart';
 import 'package:love_relationship/features/auth/data/datasources/firebase_auth_datasource.dart';
 import 'package:love_relationship/features/auth/data/repositories/login_repository_impl.dart';
@@ -27,8 +30,11 @@ Future<void> init() async{
   // Firebase
   sl.registerLazySingleton(() => FirebaseAuth.instance);
 
+  // Storage
+  sl.registerLazySingleton(() => FirebaseStorage.instance);
+  sl.registerLazySingleton<StorageService>(() => FirebaseStorageService(sl()));
+
   // Datasource
-  // sl.registerLazySingleton<AuthDatasource>(() => FirebaseAuthDatasource(sl()));
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
 
   sl.registerLazySingleton<AuthDatasource>(
@@ -37,5 +43,6 @@ Future<void> init() async{
       sl<FirebaseFirestore>(),
     ),
   );
+
 }
 
