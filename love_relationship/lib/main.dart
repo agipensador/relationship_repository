@@ -9,7 +9,6 @@ void main() async {
   await Firebase.initializeApp();
   await init(); // injeção com GetIt
   print('GetIt registrations: ${sl.allReadySync()}');
-  await sl.allReady(timeout: Duration(seconds: 2));
 
   runApp(const MyApp());
 }

@@ -34,7 +34,7 @@ void main(){
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('register_button')), findsOneWidget);
-    expect(find.text('Cadastrar'), findsOneWidget);
+    expect(find.text('Criar conta'), findsOneWidget);
     expect(find.text('Voltar'), findsOneWidget);
   });
 }

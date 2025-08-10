@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
                     SnackBar(content: Text(state.message)),
                   );
                 } else if (state is LoginSuccess) {
-                    Navigator.pushReplacementNamed(context, AppStrings.homeRoute, arguments: state);
+                    Navigator.pushReplacementNamed(context, AppStrings.homeRoute);
                   }
               },
               builder: (context, state){

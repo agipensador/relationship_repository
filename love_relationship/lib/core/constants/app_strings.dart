@@ -6,11 +6,18 @@ abstract class AppStrings {
   static const passwordHint = 'Senha';
   static const nameHint = 'Nome';
   static const loginTitle = 'Bem-vindo';
+  static const editUser = 'Editar Usuário';
+  static const save = 'Salvar';
+  static const editNameHint = 'Editar Nome';
+  static const savedOk = 'Salvo com sucesso';
+  static const saveError = 'Erro ao salvar';
+
 
   //Routes
   static const loginRoute = '/login';
   static const registerRoute = '/register';
   static const homeRoute = '/home';
+  static const editUserRoute = '/edit-user';
 
   //User Errors
   static const userNotFound = 'Usuário não encontrado';

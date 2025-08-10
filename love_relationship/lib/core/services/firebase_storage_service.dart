@@ -7,7 +7,8 @@ class FirebaseStorageService implements StorageService {
 
   @override
   Future<String> getImageUrl(String path) async{
-    final ref = storage.ref().child(path);
-    return await ref.getDownloadURL();
+    // final ref = storage.ref().child(path);
+    // return await ref.getDownloadURL();
+    return await storage.ref(path).getDownloadURL();
   }
 }

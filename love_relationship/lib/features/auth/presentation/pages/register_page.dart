@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 state.isLoading ? CircularProgressIndicator() : 
                 PrimaryButton(
                   key: const Key('register_button'),
-                  text: 'Cadastrar',
+                  text: 'Criar conta',
                   onPressed: () async {
                     final user = await context.read<RegisterCubit>()
                     .register(

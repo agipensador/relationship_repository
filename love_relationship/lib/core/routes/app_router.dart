@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/pages/edit_user_page.dart';
+import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/login_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
 
-import '../../features/auth/presentation/pages/home_page.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings){
@@ -29,10 +32,20 @@ class AppRouter {
           ),
         );
       case AppStrings.homeRoute:
-        final user = settings.arguments as UserEntity;
         return MaterialPageRoute(
-        builder: (_) => HomePage(user: user),
-  );
+          builder: (_) => BlocProvider(
+            create: (_) => sl<HomeCubit>()..loadCurrentUser(),
+            child: const HomePage(),
+          ),
+        );
+      case AppStrings.editUserRoute:
+      final user = settings.arguments as UserEntity; // vindo da Home
+      return MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => sl<EditUserCubit>()..prefill(user), // joga nome atual
+          child: EditUserPage(userEntity: user),
+        ),
+      );
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
