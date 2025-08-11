@@ -39,11 +39,10 @@ class AppRouter {
           ),
         );
       case AppStrings.editUserRoute:
-      final user = settings.arguments as UserEntity; // vindo da Home
       return MaterialPageRoute(
         builder: (_) => BlocProvider(
-          create: (_) => sl<EditUserCubit>()..prefill(user), // joga nome atual
-          child: EditUserPage(userEntity: user),
+          create: (_) => sl<EditUserCubit>()..load(),
+          child: EditUserPage(),
         ),
       );
       default:

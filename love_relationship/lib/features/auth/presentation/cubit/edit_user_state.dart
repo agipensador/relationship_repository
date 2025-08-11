@@ -6,7 +6,7 @@ class EditUserState {
   final UserEntity? current;
   final String? nameDraft;
 
-  const EditUserState({this.loading = false, this.error, this.current, this.nameDraft});
+  const EditUserState({this.loading = false, this.error, this.current, this.nameDraft = ''});
 
   EditUserState copyWith({
     bool? loading,

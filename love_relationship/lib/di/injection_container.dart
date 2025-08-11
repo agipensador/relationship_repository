@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:love_relationship/core/services/auth_session.dart';
 
 // Services
 import 'package:love_relationship/core/services/storage_service.dart';
@@ -87,6 +88,10 @@ Future<void> init() async {
       () => RegisterUserUsecase(sl<LoginRepository>()),
     );
   }
+  if(!sl.isRegistered<AuthSession>()){
+    sl.registerLazySingleton<AuthSession>(() => FirebaseAuthSession(sl()));
+  }
+
   // User
   if (!sl.isRegistered<GetUserProfileUsecase>()) {
     sl.registerLazySingleton<GetUserProfileUsecase>(
@@ -116,13 +121,17 @@ Future<void> init() async {
       () => HomeCubit(
         sl<GetUserProfileUsecase>(),
         sl<WatchUserProfileUsecase>(),
-        sl<fb.FirebaseAuth>(),
+        sl<AuthSession>(),
       ),
     );
   }
   if (!sl.isRegistered<EditUserCubit>()) {
     sl.registerFactory<EditUserCubit>(
-      () => EditUserCubit(sl<UpdateUserProfileUsecase>()),
+      () => EditUserCubit(
+        sl<AuthSession>(),
+        sl<GetUserProfileUsecase>(),
+        sl<UpdateUserProfileUsecase>(),
+        ),
     );
   }
 }

@@ -9,7 +9,7 @@ abstract class AppStrings {
   static const editUser = 'Editar Usuário';
   static const save = 'Salvar';
   static const editNameHint = 'Editar Nome';
-  static const savedOk = 'Salvo com sucesso';
+  static const savedSuccess = 'Salvo com sucesso';
   static const saveError = 'Erro ao salvar';
 
 
@@ -22,4 +22,5 @@ abstract class AppStrings {
   //User Errors
   static const userNotFound = 'Usuário não encontrado';
   static const createUserError = 'Erro ao criar usuário';
+  static const unauthenticatedUser = 'Usuário não autenticado';
 }

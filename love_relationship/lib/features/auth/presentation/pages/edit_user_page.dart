@@ -8,9 +8,9 @@ import 'package:love_relationship/shared/widgets/primary_button.dart';
 
 class EditUserPage extends StatefulWidget {
   //Aqui é o usuário que inicia na página
-  final UserEntity userEntity;
+  // final UserEntity userEntity;
 
-  const EditUserPage({required this.userEntity, super.key});
+  const EditUserPage({super.key});
 
   @override
   State<EditUserPage> createState() => _EditUserPageState();
@@ -23,7 +23,8 @@ class _EditUserPageState extends State<EditUserPage> {
   void initState() {
     super.initState();
     // aqui widget.userEntity.name seta o nome do usuário que inicia na PG
-    nameController = TextEditingController(text: widget.userEntity.name);
+    // nameController = TextEditingController(text: widget.userEntity.name);
+    nameController = TextEditingController();
   }
 
   @override
@@ -38,12 +39,19 @@ class _EditUserPageState extends State<EditUserPage> {
             appBar: AppBar(title: Text(AppStrings.editUser)),
             body: BlocConsumer<EditUserCubit, EditUserState>(
               listener: (context, state) {
+                // quando carregar o usuário, atualiza o controller  
+                if(state.current != null && nameController.text != state.nameDraft){
+                  nameController.text = state.nameDraft!;
+                }
                 if (state.error != null) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(state.error!)));
                 }
               },
               builder: (context, state) {
+                if (state.loading && state.current == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 return Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
@@ -71,7 +79,7 @@ class _EditUserPageState extends State<EditUserPage> {
 
                           if (saveEdittedUser) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(AppStrings.savedOk)),
+                              SnackBar(content: Text(AppStrings.savedSuccess)),
                             );
                             Navigator.pop(context); // volta pra Home
                           } else {
