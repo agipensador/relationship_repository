@@ -10,7 +10,7 @@ String failureToMessage(BuildContext context, Failure failure){
       case AuthErrorType.userNotFound:
         return l10n.userNotFound;
       case AuthErrorType.invalidCredentials:
-        return l10n.saveError; // crie uma string específica se quiser
+        return l10n.invalidCredentials; 
       case AuthErrorType.unauthenticated:
         return l10n.unauthenticatedUser;
       case AuthErrorType.emailAlreadyInUse:
@@ -26,14 +26,14 @@ String failureToMessage(BuildContext context, Failure failure){
     case ServerErrorType.createUserError:
       return l10n.createUserError;
     case ServerErrorType.updateUserError:
-      return l10n.saveError;
+      return l10n.serverErrorUpdateUser;
     case ServerErrorType.network:
-      return l10n.saveError; // crie "Sem conexão" se quiser
+      return l10n.serverErrorNetwork; 
     case ServerErrorType.timeout:
-      return l10n.saveError; // crie "Tempo esgotado" se quiser
+      return l10n.serverErrorTimeout;
     case ServerErrorType.unknown:
     default:
-      return l10n.saveError;
+      return l10n.serverError;
     }
   }
 

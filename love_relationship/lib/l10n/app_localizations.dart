@@ -204,6 +204,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error registering user'**
   String get errorRegisteringUser;
+
+  /// No description provided for @serverError.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops, there was an error with our service. Please try again'**
+  String get serverError;
+
+  /// No description provided for @serverErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops, internet connection problems'**
+  String get serverErrorNetwork;
+
+  /// No description provided for @serverErrorTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops, response time exceeded...'**
+  String get serverErrorTimeout;
+
+  /// No description provided for @serverErrorUpdateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating user'**
+  String get serverErrorUpdateUser;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Credentials'**
+  String get invalidCredentials;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

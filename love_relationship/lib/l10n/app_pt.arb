@@ -16,5 +16,10 @@
   "userNotFound": "Usuário não encontrado",
   "createUserError": "Erro ao criar usuário",
   "unauthenticatedUser": "Usuário não autenticado",
-  "errorRegisteringUser": "Erro ao registrar usuário"
+  "errorRegisteringUser": "Erro ao registrar usuário",
+  "serverError": "Ops, erro em nosso serviço. Tente novamente",
+  "serverErrorNetwork": "Ops, problemas de conexão com internet",
+  "serverErrorTimeout": "Ops, tempo de resposta excedido...",
+  "serverErrorUpdateUser": "Erro ao atualizar usuário",
+  "invalidCredentials": "Credenciais inválidas"
 }

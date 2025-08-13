@@ -61,4 +61,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get errorRegisteringUser => 'Erro ao registrar usuário';
+
+  @override
+  String get serverError => 'Ops, erro em nosso serviço. Tente novamente';
+
+  @override
+  String get serverErrorNetwork => 'Ops, problemas de conexão com internet';
+
+  @override
+  String get serverErrorTimeout => 'Ops, tempo de resposta excedido...';
+
+  @override
+  String get serverErrorUpdateUser => 'Erro ao atualizar usuário';
+
+  @override
+  String get invalidCredentials => 'Credenciais inválidas';
 }

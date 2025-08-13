@@ -61,4 +61,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorRegisteringUser => 'Error al registrar usuario';
+
+  @override
+  String get serverError => 'Oops, error con nuestro servicio. Inténtalo de nuevo';
+
+  @override
+  String get serverErrorNetwork => 'Ups, problemas de conexión a Internet';
+
+  @override
+  String get serverErrorTimeout => 'Ups, tiempo de respuesta excedido...';
+
+  @override
+  String get serverErrorUpdateUser => 'Error al actualizar usuario';
+
+  @override
+  String get invalidCredentials => 'Credenciales no válidas';
 }

@@ -29,8 +29,6 @@ void main() {
   });
 
   Future<Widget> createWidgetUnderTest()async{
-  // Widget createWidgetUnderTest(){
-
     return MaterialApp(
       home: BlocProvider<LoginCubit>.value(
         value: mockLoginCubit,
