@@ -1,13 +1,31 @@
 abstract class Failure {
-  final String message;
+  final String? message;
 
-  Failure(this.message);
+  Failure({this.message});
+}
+
+enum ServerErrorType {
+  unknown,
+  createUserError,
+  updateUserError,
+  network, 
+  timeout
+}
+
+enum AuthErrorType {
+  unknown,
+  userNotFound,
+  invalidCredentials,
+  unauthenticated,
+  emailAlreadyInUse
 }
 
 class ServerFailure extends Failure {
-  ServerFailure(super.message);
+  final ServerErrorType? type;
+  ServerFailure(this.type, {super.message});
 }
 
 class AuthFailure extends Failure {
-  AuthFailure(super.message);
+  final AuthErrorType? type;
+  AuthFailure(this.type, {super.message});
 }

@@ -1,26 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
 import 'package:love_relationship/features/auth/domain/usecases/login_usecase.dart';
-
-part 'login_state.dart';
+import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginUseCase loginUseCase;
 
-  LoginCubit(this.loginUseCase) : super(LoginInitial());
+  LoginCubit(this.loginUseCase) : super(LoginState.initial());
 
-  Future<void> login(String email, String password) async{
-    if (email.isEmpty || password.isEmpty) {
-      emit(LoginFailure('Preencha todos os campos'));
-      return;
-  }
-    emit(LoginLoading());
+  void onEmailChanged(String v) => emit(state.copyWith(email: v, error: null));
+  void onPasswordChanged(String v) => emit(state.copyWith(password: v, error: null));
 
-    final result = await loginUseCase(email, password);
+  Future<void> login() async {
+    emit(state.copyWith(loading: true, error: null));
+    final result = await loginUseCase(state.email.trim(), state.password.trim());
 
     result.fold(
-      (failure) => emit(LoginFailure(failure.message)),
-      (user) => emit(LoginSuccess(user))
-    );
+      (failure) => emit(state.copyWith(loading: false, error: failure)),
+      (user) => emit(state.copyWith(loading: false, user: user, error: null)));
   }
 }

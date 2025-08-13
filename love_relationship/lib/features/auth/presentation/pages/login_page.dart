@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/login_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_image_header.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
+import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/clickable_button.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
 import 'package:love_relationship/shared/widgets/secondary_button.dart';
@@ -13,6 +16,8 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
 
@@ -24,39 +29,37 @@ class LoginPage extends StatelessWidget {
           children: [
             const AuthImageHeader(), // image Banco
             SizedBox(height: 32),
-            AuthTextField(controller: emailController, hint: 'Email'),
+            AuthTextField(controller: emailController, hint: l10n.emailHint, onChanged: context.read<LoginCubit>().onEmailChanged),
             const SizedBox(height: 16),
-            AuthTextField(controller: passwordController, hint: 'Senha', obscure: true),
+            AuthTextField(controller: passwordController, hint: l10n.passwordHint, obscure: true, onChanged: context.read<LoginCubit>().onPasswordChanged),
             const SizedBox(height: 4),
-            Align(alignment: Alignment.centerRight, child: ClickableButton(text: 'Esqueci a senha', onPressed: () => Navigator.pushNamed(context, '/register'))),
+            Align(alignment: Alignment.centerRight, child: ClickableButton(text: l10n.forgotPassword, onPressed: () => Navigator.pushNamed(context, AppStrings.registerRoute))),
             const SizedBox(height: 16),
             //BLoC
             BlocConsumer<LoginCubit, LoginState>(
               listener: (context, state){
-                if(state is LoginFailure){
+                if(state.error != null){
+                  final msg = failureToMessage(context, state.error!);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(content: Text(msg)),
                   );
-                } else if (state is LoginSuccess) {
+                } else if (state.user != null) {
                     Navigator.pushReplacementNamed(context, AppStrings.homeRoute);
                   }
               },
               builder: (context, state){
-                return state is LoginLoading ? CircularProgressIndicator()
+                return state.loading ? CircularProgressIndicator()
                  : Column(
                     children: [
                       PrimaryButton(
                         key: Key('login_button'),
-                        text: AppStrings.btnAccess,
+                        text: l10n.btnAccess,
                         onPressed: () =>
-                          context.read<LoginCubit>().login(
-                            emailController.text.trim(),
-                            passwordController.text.trim(),
-                          )
+                          context.read<LoginCubit>().login()
                       ),
                       SizedBox(height: 16),
                       SecondaryButton(
-                        text: AppStrings.btnRegister, 
+                        text: l10n.createAccount, 
                         onPressed:  () => Navigator.pushNamed(context, AppStrings.registerRoute)
                       ),
                     ],

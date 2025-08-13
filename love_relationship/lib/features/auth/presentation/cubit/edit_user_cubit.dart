@@ -1,73 +1,89 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/core/services/auth_session.dart';
 import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
 import 'package:love_relationship/features/auth/domain/usecases/get_user_profile_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/update_user_profile_usecase.dart';
-
-part 'edit_user_state.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/edit_user_state.dart';
 
 class EditUserCubit extends Cubit<EditUserState> {
   final AuthSession session;
   final GetUserProfileUsecase getUser;
   final UpdateUserProfileUsecase updateUser;
 
-  EditUserCubit(this.session, this.getUser, this.updateUser) :super(const EditUserState());
+  EditUserCubit(this.session, this.getUser, this.updateUser) :super(EditUserState.initial());
 
-  // void prefill(UserEntity user){
-  //   emit(state.copyWith(current: user, nameDraft: user.name));
-  // }
+  // Carrega o usuario atual
 
-  // Carrega o usuario atual e pré preenche o rascunho com o nome
-  Future<void> load() async {
+    Future<void> load() async {
     emit(state.copyWith(loading: true, error: null));
-    try{
-      final uid = session.requiredUid();
-      final result = await getUser(uid);
-      result.fold(
-        (failure) => emit(state.copyWith(loading: false, error: failure.message)), 
-        (user) => emit(state.copyWith(loading: false, current: user, nameDraft: user.name)));
+    try {
+      final uid = session.requireUid();
+      final res = await getUser(uid);
+      res.fold(
+        (failure) => emit(state.copyWith(loading: false, error: failure)),
+        (user) => emit(state.copyWith(
+          loading: false,
+          current: user,
+          nameDraft: user.name,
+          error: null,
+        )),
+      );
     } catch (e) {
-      emit(state.copyWith(loading: false, error: e.toString()));
+      emit(state.copyWith(
+        loading: false,
+        error: ServerFailure(ServerErrorType.unknown),
+      ));
     }
   }
 
   void onNameChanged(String value){
-    emit(state.copyWith(nameDraft: value));
+    emit(state.copyWith(nameDraft: value, error: null));
   }
 
   // Salva o nome
   Future<bool> save() async {
-    final current = state.current;
+    // final current = state.current;
     
-    if(current == null) return false;
+    // if(current == null) return false;
+    // final newName = state.nameDraft!.trim().isEmpty ? current.name : state.nameDraft?.trim(); 
+    // if(newName == current.name) return true; // Nada pra salvar
+    
     // emit(state.copyWith(loading: true, error: null));
-
     // final updated = UserEntity(
     //   id: current.id, 
-    //   name: state.nameDraft?.trim().isEmpty == true ? current.name 
-    //   : state.nameDraft?.trim() ?? '',
+    //   name: newName,
     //   email: current.email,
-    //   );
+    // );
 
-    final newName = state.nameDraft!.trim().isEmpty ? current.name : state.nameDraft?.trim(); 
-    if(newName == current.name) return true; // Nada pra salvar
-    
+    // final result = await updateUser(updated);
+
+    // return result.fold(
+    //   (failure){
+    //     state.copyWith(loading: false, error: failure);
+    //     return false;
+    //   }, (user) {
+    //     state.copyWith(loading: false, current: user);
+    //     return true;
+    // });
+
+    final current = state.current;
+    if (current == null) return false;
+
+    final newName =
+        state.nameDraft!.trim().isEmpty ? current.name : state.nameDraft?.trim();
+    if (newName == current.name) return true; // nada a salvar
+
     emit(state.copyWith(loading: true, error: null));
-    final updated = UserEntity(
-      id: current.id, 
-      name: newName,
-      email: current.email,
-    );
+    final updated = UserEntity(id: current.id, name: newName, email: current.email);
 
-    final result = await updateUser(updated);
-
-    return result.fold(
-      (failure){
-        state.copyWith(loading: false, error: failure.message);
-        return false;
-      }, (user) {
-        state.copyWith(loading: false, current: user);
-        return true;
+    final res = await updateUser(updated);
+    return res.fold((f) {
+      emit(state.copyWith(loading: false, error: f));
+      return false;
+    }, (user) {
+      emit(state.copyWith(loading: false, current: user, nameDraft: user.name, error: null));
+      return true;
     });
   }
 }

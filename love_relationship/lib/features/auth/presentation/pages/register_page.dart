@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
 import 'package:love_relationship/shared/widgets/secondary_button.dart';
 
@@ -20,8 +21,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Criar conta')),
+      appBar: AppBar(title: Text(l10n.createAccount)),
       body: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if(state.errorMessage != null){
@@ -36,23 +39,23 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(    
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AuthTextField(controller: nameController, hint: 'Nome'),
+                AuthTextField(controller: nameController, hint: l10n.nameHint),
                 const SizedBox(height: 16),
                 AuthTextField(
                   controller: emailController,
-                  hint: 'Email',
+                  hint: l10n.emailHint,
                 ),
                 const SizedBox(height: 16),
                 AuthTextField(
                   controller: passController,
-                  hint: 'Senha',
+                  hint: l10n.passwordHint,
                   obscure: true,
                 ),
                 const SizedBox(height: 24),
                 state.isLoading ? CircularProgressIndicator() : 
                 PrimaryButton(
                   key: const Key('register_button'),
-                  text: 'Criar conta',
+                  text: l10n.createAccount,
                   onPressed: () async {
                     final user = await context.read<RegisterCubit>()
                     .register(
@@ -66,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   }),
                 const SizedBox(height: 16),
                 SecondaryButton(
-                  text: 'Voltar',
+                  text: l10n.back,
                   onPressed: () async {
                     Navigator.pop(context);
                     }

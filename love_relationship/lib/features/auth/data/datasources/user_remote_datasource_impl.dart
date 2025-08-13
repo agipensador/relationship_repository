@@ -12,7 +12,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<UserModel> getById(String uid) async {
     final doc = await _col.doc(uid).get();
-    if (!doc.exists) throw ServerFailure('Usuário não encontrado');
+    // todo criar type para: Usuário não encontrado
+    if (!doc.exists) throw ServerFailure(ServerErrorType.unknown);
     return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
   }
 
@@ -31,7 +32,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Stream<UserModel> watchById(String uid) {
     return _col.doc(uid).snapshots().map((snap) {
-      if (!snap.exists) throw ServerFailure('Usuário não encontrado');
+      // todo criar type para: Usuário não encontrado
+      if (!snap.exists) throw ServerFailure(ServerErrorType.unknown);
       return UserModel.fromMap(snap.data() as Map<String, dynamic>, snap.id);
     });
   }

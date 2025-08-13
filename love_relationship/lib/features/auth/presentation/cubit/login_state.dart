@@ -1,17 +1,35 @@
-part of 'login_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'package:love_relationship/core/error/failure.dart';
+import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
 
-abstract class LoginState {}
+class LoginState extends Equatable {
+  final bool loading;
+  final UserEntity? user;
+  final Failure? error;
+  final String email;
+  final String password;
 
-class LoginInitial extends LoginState{}
+  const LoginState({this.loading = false, this.user, this.error, this.email = '', this.password = ''});
 
-class LoginLoading extends LoginState{}
+  factory LoginState.initial() => const LoginState();
 
-class LoginSuccess extends LoginState{
-  final UserEntity user;
-  LoginSuccess(this.user);
-}
+  LoginState copyWith({
+    UserEntity? user,
+    bool? loading,
+    Failure? error,
+    String? email,
+    String? password
+  }){
+    return LoginState(
+      loading: loading ?? this.loading,
+      user: user?? this.user,
+      error: error,
+      email: email ?? this.email,
+      password: password ?? this.password
+    );
+  }
 
-class LoginFailure extends LoginState{
-  final String message;
-  LoginFailure(this.message);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [loading, user, email, error, password];
 }

@@ -1,0 +1,20 @@
+{
+  "@@locale": "es",
+  "btnAccess": "Iniciar sesión",
+  "createAccount": "Crear cuenta",
+  "back": "Volver",
+  "emailHint": "Correo",
+  "passwordHint": "Contraseña",
+  "forgotPassword": "Has olvidado tu contraseña",
+  "nameHint": "Nombre",
+  "welcome": "Bienvenido",
+  "editUser": "Editar usuario",
+  "save": "Guardar",
+  "editNameHint": "Editar nombre",
+  "savedSuccess": "Guardado con éxito",
+  "saveError": "Error al guardar",
+  "userNotFound": "Usuario no encontrado",
+  "createUserError": "Error al crear usuario",
+  "unauthenticatedUser": "Usuario no autenticado",
+  "errorRegisteringUser": "Error al registrar usuario"
+}

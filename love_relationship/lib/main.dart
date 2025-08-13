@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/theme/app_theme.dart';
+import 'package:love_relationship/l10n/app_localizations.dart';
 import 'core/routes/app_router.dart';
 import 'di/injection_container.dart';
 
@@ -19,13 +21,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       title: 'Always About Love - A2',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
       onGenerateRoute: AppRouter.generateRoute,
-      initialRoute: '/login',
+      initialRoute: AppStrings.loginRoute,
     );
   }
 }

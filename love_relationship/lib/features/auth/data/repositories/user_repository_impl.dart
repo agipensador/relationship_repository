@@ -16,7 +16,8 @@ class UserRepositoryImpl implements UserRepository {
       final model = await remote.getById(uid);
       return Right(model); // Model herda de Entity
     } catch (e) {
-      return Left(ServerFailure('Falha ao buscar usuário'));
+      // TODO CRIAR TIPO DE FALHA ESPECÍFICA SOBRE BUSCAR USUARIO
+      return Left(ServerFailure(ServerErrorType.unknown, message: 'Falha ao buscar usuário'));
     }
   }
 
@@ -27,7 +28,7 @@ class UserRepositoryImpl implements UserRepository {
       final created = await remote.create(model);
       return Right(created);
     } catch (e) {
-      return Left(ServerFailure('Falha ao criar usuário'));
+      return Left(ServerFailure(ServerErrorType.createUserError, message: 'Falha ao criar usuário'));
     }
   }
 
@@ -38,7 +39,7 @@ class UserRepositoryImpl implements UserRepository {
       final updated = await remote.update(model);
       return Right(updated);
     } catch (e) {
-      return Left(ServerFailure('Falha ao atualizar usuário'));
+      return Left(ServerFailure(ServerErrorType.updateUserError, message: 'Falha ao atualizar usuário'));
     }
   }
 
@@ -46,6 +47,7 @@ class UserRepositoryImpl implements UserRepository {
   Stream<Either<Failure, UserEntity>> watchById(String uid) {
     return remote.watchById(uid).map<Either<Failure, UserEntity>>(
       (model) => Right(model),
-    ).handleError((e) => Left(ServerFailure('Falha ao observar usuário')));
+    // TODO CRIAR TIPO DE FALHA ESPECÍFICA SOBRE OBSERVAR USUARIO
+    ).handleError((e) => Left(ServerFailure(ServerErrorType.unknown, message: 'Falha ao observar usuário')));
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/di/injection_container.dart';
-import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
@@ -39,12 +38,12 @@ class AppRouter {
           ),
         );
       case AppStrings.editUserRoute:
-      return MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (_) => sl<EditUserCubit>()..load(),
-          child: EditUserPage(),
-        ),
-      );
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => sl<EditUserCubit>()..load(), // ou carregue na Page (já estamos chamando lá)
+            child: const EditUserPage(),
+          ),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

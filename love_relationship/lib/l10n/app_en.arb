@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "btnAccess": "Log in",
+  "btnRegister": "Sign up",
+  "createAccount": "Create account",
+  "back": "Back",
+  "emailHint": "Email",
+  "passwordHint": "Password",
+  "forgotPassword": "Forgot password",
+  "nameHint": "Name",
+  "welcome": "Welcome",
+  "editUser": "Edit user",
+  "save": "Save",
+  "editNameHint": "Edit name",
+  "savedSuccess": "Saved successfully",
+  "saveError": "Error saving",
+  "userNotFound": "User not found",
+  "createUserError": "Error creating user",
+  "unauthenticatedUser": "Unauthenticated user",
+  "errorRegisteringUser": "Error registering user"
+}

@@ -1,0 +1,20 @@
+{
+  "@@locale": "pt",
+  "btnAccess": "Entrar",
+  "createAccount": "Criar Conta",
+  "back": "Voltar",
+  "emailHint": "Email",
+  "passwordHint": "Senha",
+  "forgotPassword": "Esqueci a senha",
+  "nameHint": "Nome",
+  "welcome": "Bem vindo",
+  "editUser": "Editar Usuário",
+  "save": "Salvar",
+  "editNameHint": "Editar Nome",
+  "savedSuccess": "Salvo com sucesso",
+  "saveError": "Erro ao salvar",
+  "userNotFound": "Usuário não encontrado",
+  "createUserError": "Erro ao criar usuário",
+  "unauthenticatedUser": "Usuário não autenticado",
+  "errorRegisteringUser": "Erro ao registrar usuário"
+}

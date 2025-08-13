@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:love_relationship/core/constants/app_strings.dart';
+import 'package:love_relationship/core/error/failure.dart';
 
 abstract class AuthSession {
   String? currentUidOrNull();
-  String requiredUid(); // Lança se não autenticado
+  String requireUid(); // Lança se não autenticado
   Stream<String?> uidChanges();
 }
 
@@ -15,10 +15,12 @@ class FirebaseAuthSession implements AuthSession {
   String? currentUidOrNull() => _auth.currentUser?.uid;
 
   @override
-  String requiredUid(){
-    final uid = currentUidOrNull();
-    if(uid == null) throw StateError(AppStrings.unauthenticatedUser);
-    return uid; 
+  String requireUid() {
+    final uid = fb.FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      throw AuthFailure(AuthErrorType.unauthenticated);
+    }
+    return uid;
   }
 
   @override

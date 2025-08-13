@@ -19,7 +19,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(loading: true, error: null));
 
     try {
-      final uid = authSession.requiredUid();
+      final uid = authSession.requireUid();
 
       // Opcional: escuta em tempo real
       _streamSubscription?.cancel();
