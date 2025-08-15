@@ -5,10 +5,11 @@ import 'package:love_relationship/core/theme/app_theme.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'core/routes/app_router.dart';
 import 'di/injection_container.dart';
+import 'package:love_relationship/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await init(); // injeção com GetIt
   print('GetIt registrations: ${sl.allReadySync()}');
 

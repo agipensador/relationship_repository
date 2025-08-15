@@ -17,55 +17,82 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
 
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView(padding: EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16),
           child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const AuthImageHeader(), // image Banco
-            SizedBox(height: 32),
-            AuthTextField(controller: emailController, hint: l10n.emailHint, onChanged: context.read<LoginCubit>().onEmailChanged),
-            const SizedBox(height: 16),
-            AuthTextField(controller: passwordController, hint: l10n.passwordHint, obscure: true, onChanged: context.read<LoginCubit>().onPasswordChanged),
-            const SizedBox(height: 4),
-            Align(alignment: Alignment.centerRight, child: ClickableButton(text: l10n.forgotPassword, onPressed: () => Navigator.pushNamed(context, AppStrings.registerRoute))),
-            const SizedBox(height: 16),
-            //BLoC
-            BlocConsumer<LoginCubit, LoginState>(
-              listener: (context, state){
-                if(state.error != null){
-                  final msg = failureToMessage(context, state.error!);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(msg)),
-                  );
-                } else if (state.user != null) {
-                    Navigator.pushReplacementNamed(context, AppStrings.homeRoute);
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AuthImageHeader(), // image Banco
+              SizedBox(height: 32),
+
+              AuthTextField(
+                controller: emailController,
+                hint: l10n.emailHint,
+                onChanged: context.read<LoginCubit>().onEmailChanged,
+              ),
+
+              const SizedBox(height: 16),
+              AuthTextField(
+                controller: passwordController,
+                hint: l10n.passwordHint,
+                obscure: true,
+                onChanged: context.read<LoginCubit>().onPasswordChanged,
+              ),
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ClickableButton(
+                  text: l10n.forgotPassword,
+                  onPressed: () =>
+                      Navigator.pushNamed(context, AppStrings.registerRoute),
+                ),
+              ),
+              const SizedBox(height: 16),
+              //BLoC
+              BlocConsumer<LoginCubit, LoginState>(
+                listener: (context, state) {
+                  if (state.error != null) {
+                    final msg = failureToMessage(context, state.error!);
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(msg)));
+                  } else if (state.user != null) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      AppStrings.homeRoute,
+                    );
                   }
-              },
-              builder: (context, state){
-                return state.loading ? CircularProgressIndicator()
-                 : Column(
-                    children: [
-                      PrimaryButton(
-                        key: Key('login_button'),
-                        text: l10n.btnAccess,
-                        onPressed: () =>
-                          context.read<LoginCubit>().login()
-                      ),
-                      SizedBox(height: 16),
-                      SecondaryButton(
-                        text: l10n.createAccount, 
-                        onPressed:  () => Navigator.pushNamed(context, AppStrings.registerRoute)
-                      ),
-                    ],
-                  );
-              })
-          ],
+                },
+                builder: (context, state) {
+                  return state.loading
+                      ? CircularProgressIndicator()
+                      : Column(
+                          children: [
+                            PrimaryButton(
+                              key: Key('login_button'),
+                              text: l10n.btnAccess,
+                              onPressed: () =>
+                                  context.read<LoginCubit>().login(),
+                            ),
+                            SizedBox(height: 16),
+                            SecondaryButton(
+                              text: l10n.createAccount,
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                AppStrings.registerRoute,
+                              ),
+                            ),
+                          ],
+                        );
+                },
+              ),
+            ],
           ),
         ),
       ),
