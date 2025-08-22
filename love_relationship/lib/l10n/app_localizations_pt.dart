@@ -76,4 +76,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get invalidCredentials => 'Credenciais inválidas';
+
+  @override
+  String get loginTitle => 'Login';
 }

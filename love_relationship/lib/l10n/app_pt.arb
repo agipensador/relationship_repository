@@ -2,6 +2,7 @@
   "@@locale": "pt",
   "btnAccess": "Entrar",
   "createAccount": "Criar Conta",
+  "btnRegister": "Sign up",
   "back": "Voltar",
   "emailHint": "Email",
   "passwordHint": "Senha",
@@ -21,5 +22,7 @@
   "serverErrorNetwork": "Ops, problemas de conexão com internet",
   "serverErrorTimeout": "Ops, tempo de resposta excedido...",
   "serverErrorUpdateUser": "Erro ao atualizar usuário",
-  "invalidCredentials": "Credenciais inválidas"
+  "invalidCredentials": "Credenciais inválidas",
+
+  "loginTitle": "Login"
 }

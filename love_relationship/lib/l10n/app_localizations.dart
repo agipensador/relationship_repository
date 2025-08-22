@@ -234,6 +234,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid Credentials'**
   String get invalidCredentials;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

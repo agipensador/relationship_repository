@@ -14,7 +14,9 @@ import 'package:love_relationship/features/auth/data/datasources/firebase_auth_d
 import 'package:love_relationship/features/auth/data/repositories/login_repository_impl.dart';
 import 'package:love_relationship/features/auth/domain/repositories/login_repository.dart';
 import 'package:love_relationship/features/auth/domain/usecases/login_usecase.dart';
+import 'package:love_relationship/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/register_user_usecase.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
 
@@ -37,7 +39,9 @@ Future<void> init() async {
     sl.registerLazySingleton<fb.FirebaseAuth>(() => fb.FirebaseAuth.instance);
   }
   if (!sl.isRegistered<FirebaseFirestore>()) {
-    sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+    sl.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
   }
   if (!sl.isRegistered<FirebaseStorage>()) {
     sl.registerLazySingleton<FirebaseStorage>(() => FirebaseStorage.instance);
@@ -54,7 +58,10 @@ Future<void> init() async {
   // Auth (email/senha, etc.)
   if (!sl.isRegistered<AuthDatasource>()) {
     sl.registerLazySingleton<AuthDatasource>(
-      () => FirebaseAuthDatasource(sl<fb.FirebaseAuth>(), sl<FirebaseFirestore>()),
+      () => FirebaseAuthDatasource(
+        sl<fb.FirebaseAuth>(),
+        sl<FirebaseFirestore>(),
+      ),
     );
   }
   // User profile (Firestore)
@@ -88,7 +95,7 @@ Future<void> init() async {
       () => RegisterUserUsecase(sl<LoginRepository>()),
     );
   }
-  if(!sl.isRegistered<AuthSession>()){
+  if (!sl.isRegistered<AuthSession>()) {
     sl.registerLazySingleton<AuthSession>(() => FirebaseAuthSession(sl()));
   }
 
@@ -108,13 +115,18 @@ Future<void> init() async {
       () => UpdateUserProfileUsecase(sl<UserRepository>()),
     );
   }
+  if (!sl.isRegistered<LogoutUsecase>()) {
+    sl.registerLazySingleton(() => LogoutUsecase(sl<LoginRepository>()));
+  }
 
   // ========= CUBITS =========
   if (!sl.isRegistered<LoginCubit>()) {
     sl.registerFactory<LoginCubit>(() => LoginCubit(sl<LoginUseCase>()));
   }
   if (!sl.isRegistered<RegisterCubit>()) {
-    sl.registerFactory<RegisterCubit>(() => RegisterCubit(sl<RegisterUserUsecase>()));
+    sl.registerFactory<RegisterCubit>(
+      () => RegisterCubit(sl<RegisterUserUsecase>()),
+    );
   }
   if (!sl.isRegistered<HomeCubit>()) {
     sl.registerFactory<HomeCubit>(
@@ -131,7 +143,10 @@ Future<void> init() async {
         sl<AuthSession>(),
         sl<GetUserProfileUsecase>(),
         sl<UpdateUserProfileUsecase>(),
-        ),
+      ),
     );
+  }
+  if (!sl.isRegistered<AuthCubit>()) {
+    sl.registerFactory(() => AuthCubit(sl<LogoutUsecase>()));
   }
 }

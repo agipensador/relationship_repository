@@ -4,8 +4,8 @@ import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/auth/data/datasources/auth_datasource.dart';
 import 'package:love_relationship/features/auth/data/models/user_model.dart';
 import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
- 
-class FirebaseAuthDatasource implements AuthDatasource  {
+
+class FirebaseAuthDatasource implements AuthDatasource {
   final fb.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
 
@@ -16,34 +16,37 @@ class FirebaseAuthDatasource implements AuthDatasource  {
     required String email,
     required String password,
     required String name,
-    }) async {
-      //Cria email e senha no Firebase
-      final result = await _firebaseAuth
-        .createUserWithEmailAndPassword(
-          email: email, password: password);
+  }) async {
+    //Cria email e senha no Firebase
+    final result = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      final user = result.user;
-      if (user == null) throw AuthFailure(AuthErrorType.unauthenticated);
+    final user = result.user;
+    if (user == null) throw AuthFailure(AuthErrorType.unauthenticated);
 
-      await user.updateDisplayName(name);
-      await user.reload();
+    await user.updateDisplayName(name);
+    await user.reload();
 
-      print('gio: register $name');
+    print('gio: register $name');
 
-      // Salvar no Firestore
-      final userModel = UserModel(id: user.uid, name: name, email: email);
-      await _firestore.collection('users').doc(user.uid).set(userModel.toMap());
+    // Salvar no Firestore
+    final userModel = UserModel(id: user.uid, name: name, email: email);
+    await _firestore.collection('users').doc(user.uid).set(userModel.toMap());
 
     return userModel;
-
   }
-  
+
   @override
   Future<UserEntity> login({
     required String email,
-    required String password}) async {
+    required String password,
+  }) async {
     final result = await _firebaseAuth.signInWithEmailAndPassword(
-      email: email, password: password);
+      email: email,
+      password: password,
+    );
 
     final user = result.user;
     if (user == null) throw AuthFailure(AuthErrorType.userNotFound);
@@ -55,5 +58,10 @@ class FirebaseAuthDatasource implements AuthDatasource  {
       name: user.displayName ?? '',
       email: user.email ?? '',
     );
+  }
+
+  @override
+  Future<void> logout() async {
+    await _firebaseAuth.signOut();
   }
 }

@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 4),
               Align(
                 alignment: Alignment.centerRight,
-                child: ClickableButton(
+                child: TextClickableButton(
                   text: l10n.forgotPassword,
                   onPressed: () =>
                       Navigator.pushNamed(context, AppStrings.registerRoute),
@@ -63,9 +63,16 @@ class LoginPage extends StatelessWidget {
                       context,
                     ).showSnackBar(SnackBar(content: Text(msg)));
                   } else if (state.user != null) {
-                    Navigator.pushReplacementNamed(
+                    // Navigator.pushReplacementNamed(
+                    //   context,
+                    //   AppStrings.shellRoute,
+                    // );
+                    Navigator.of(
                       context,
-                      AppStrings.homeRoute,
+                      rootNavigator: true,
+                    ).pushNamedAndRemoveUntil(
+                      AppStrings.shellRoute,
+                      (route) => false,
                     );
                   }
                 },

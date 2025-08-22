@@ -22,5 +22,7 @@
   "serverErrorNetwork": "Oops, internet connection problems",
   "serverErrorTimeout": "Oops, response time exceeded...",
   "serverErrorUpdateUser": "Error updating user",
-  "invalidCredentials": "Invalid Credentials"
+  "invalidCredentials": "Invalid Credentials",
+
+  "loginTitle": "Login"
 }

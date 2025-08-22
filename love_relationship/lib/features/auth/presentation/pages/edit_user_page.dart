@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/constants/app_strings.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
@@ -13,6 +15,7 @@ class EditUserPage extends StatefulWidget {
   @override
   State<EditUserPage> createState() => _EditUserPageState();
 }
+
 class _EditUserPageState extends State<EditUserPage> {
   final nameController = TextEditingController();
 
@@ -42,7 +45,9 @@ class _EditUserPageState extends State<EditUserPage> {
           }
           if (state.error != null) {
             final msg = failureToMessage(context, state.error!);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(msg)));
           }
         },
         builder: (context, state) {
@@ -71,10 +76,41 @@ class _EditUserPageState extends State<EditUserPage> {
                           final ok = await context.read<EditUserCubit>().save();
                           if (!mounted) return;
                           final msg = ok ? l10n.savedSuccess : l10n.saveError;
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(msg)));
                           if (ok) Navigator.pop(context);
                         },
                       ),
+                BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state.error != null) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.error!)));
+                    } else if (state.loggedOut) {
+                      // Navigator.pushReplacementNamed(
+                      //   context,
+                      //   AppStrings.loginRoute,
+                      // );
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushNamedAndRemoveUntil(
+                        AppStrings.loginRoute,
+                        (route) => false,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return state.isLoggingOut
+                        ? const CircularProgressIndicator()
+                        : PrimaryButton(
+                            text: 'Logout',
+                            onPressed: () => context.read<AuthCubit>().logout(),
+                          );
+                  },
+                ),
               ],
             ),
           );
