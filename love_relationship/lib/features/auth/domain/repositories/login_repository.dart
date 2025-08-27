@@ -15,4 +15,6 @@ abstract class LoginRepository {
   });
 
   Future<void> logout();
+
+  Future<Either<Failure, void>> forgotPassword(String email);
 }

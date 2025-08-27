@@ -49,8 +49,10 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextClickableButton(
                   text: l10n.forgotPassword,
-                  onPressed: () =>
-                      Navigator.pushNamed(context, AppStrings.registerRoute),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    AppStrings.forgotPasswordRoute,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),

@@ -8,4 +8,6 @@ abstract class AuthDatasource {
     required String name,
   });
   Future<void> logout();
+
+  Future<void> forgotPassword(String email);
 }

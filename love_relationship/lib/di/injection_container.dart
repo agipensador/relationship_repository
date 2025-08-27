@@ -13,10 +13,12 @@ import 'package:love_relationship/features/auth/data/datasources/auth_datasource
 import 'package:love_relationship/features/auth/data/datasources/firebase_auth_datasource.dart';
 import 'package:love_relationship/features/auth/data/repositories/login_repository_impl.dart';
 import 'package:love_relationship/features/auth/domain/repositories/login_repository.dart';
+import 'package:love_relationship/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/login_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/register_user_usecase.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
 
@@ -148,5 +150,17 @@ Future<void> init() async {
   }
   if (!sl.isRegistered<AuthCubit>()) {
     sl.registerFactory(() => AuthCubit(sl<LogoutUsecase>()));
+  }
+
+  // UseCase
+  if (!sl.isRegistered<ForgotPasswordUseCase>()) {
+    sl.registerLazySingleton(
+      () => ForgotPasswordUseCase(sl<LoginRepository>()),
+    );
+  }
+
+  // Cubit
+  if (!sl.isRegistered<ForgotPasswordCubit>()) {
+    sl.registerFactory(() => ForgotPasswordCubit(sl<ForgotPasswordUseCase>()));
   }
 }

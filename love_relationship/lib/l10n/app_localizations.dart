@@ -133,6 +133,12 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordHint;
 
+  /// No description provided for @emailSentForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sent to'**
+  String get emailSentForgotPassword;
+
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:

@@ -1,25 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/features/auth/domain/usecases/logout_usecase.dart';
-
-class AuthState {
-  final bool isLoggingOut;
-  final bool loggedOut;
-  final String? error;
-
-  const AuthState({
-    this.isLoggingOut = false,
-    this.loggedOut = false,
-    this.error,
-  });
-
-  AuthState copyWith({bool? isLoggingOut, bool? loggedOut, String? error}) {
-    return AuthState(
-      isLoggingOut: isLoggingOut ?? this.isLoggingOut,
-      loggedOut: loggedOut ?? this.loggedOut,
-      error: error,
-    );
-  }
-}
+import 'package:love_relationship/features/auth/presentation/cubit/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LogoutUsecase logoutUsecase;

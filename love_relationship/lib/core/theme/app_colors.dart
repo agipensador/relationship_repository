@@ -11,4 +11,23 @@ class AppColors {
   static const Color grayDefault = Color.fromARGB(255, 158, 123, 139);
   static const Color blackDefault = Color(0xFF252525);
   static const Color whiteDefault = Color(0xFFFFFFFF);
+  static const Color redDefault = Color.fromARGB(255, 123, 0, 49);
+
+  // Estados / Feedback
+  static const Color success = Color(0xFF2E7D32); // Verde sucesso
+  static const Color warning = Color(0xFFF9A825); // Amarelo alerta
+  static const Color error = Color(0xFF96003C); // Vermelho/rosa erro
+  static const Color info = Color(0xFF1976D2); // Azul informativo
+
+  // Variantes da primária (shades & tints)
+  static const Color primaryLight = Color(
+    0xFFF48BAF,
+  ); // Rosa claro (hover, foco)
+  static const Color primaryDark = Color(
+    0xFFB22457,
+  ); // Rosa mais fechado (pressed)
+
+  // Overlay e states
+  static const Color overlay = Color(0x33000000); // Preto com 20% opacidade
+  static const Color shadow = Color(0x1A000000); // Preto com 10% opacidade
 }

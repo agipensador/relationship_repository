@@ -6,6 +6,7 @@
   "back": "Voltar",
   "emailHint": "Email",
   "passwordHint": "Senha",
+  "emailSentForgotPassword": "Email enviado para",
   "forgotPassword": "Esqueci a senha",
   "nameHint": "Nome",
   "welcome": "Bem vindo",

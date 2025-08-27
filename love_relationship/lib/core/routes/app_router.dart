@@ -5,10 +5,12 @@ import 'package:love_relationship/core/navigation/app_shell.dart';
 import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/pages/edit_user_page.dart';
+import 'package:love_relationship/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/login_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
@@ -48,6 +50,14 @@ class AppRouter {
             child: const EditUserPage(),
           ),
         );
+      case AppStrings.forgotPasswordRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => sl<ForgotPasswordCubit>(),
+            child: const ForgotPasswordPage(),
+          ),
+        );
+
       case AppStrings.shellRoute:
         return MaterialPageRoute(builder: (_) => const AppShell());
       default:

@@ -7,6 +7,7 @@
   "emailHint": "Correo",
   "passwordHint": "Contraseña",
   "forgotPassword": "Has olvidado tu contraseña",
+  "emailSentForgotPassword": "Correo electrónico enviado a",
   "nameHint": "Nombre",
   "welcome": "Bienvenido",
   "editUser": "Editar usuario",

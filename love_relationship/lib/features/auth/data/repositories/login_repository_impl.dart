@@ -71,4 +71,16 @@ class LoginRepositoryImpl implements LoginRepository {
       rethrow; // podemos mapear pra Failure se quiser
     }
   }
+
+  @override
+  Future<Either<Failure, void>> forgotPassword(String email) async {
+    try {
+      await datasource.forgotPassword(email);
+      return const Right(null);
+    } on Failure catch (f) {
+      return Left(f);
+    } catch (e) {
+      return Left(ServerFailure(ServerErrorType.unknown));
+    }
+  }
 }

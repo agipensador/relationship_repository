@@ -6,6 +6,7 @@
   "back": "Back",
   "emailHint": "Email",
   "passwordHint": "Password",
+  "emailSentForgotPassword": "Email sent to",
   "forgotPassword": "Forgot password",
   "nameHint": "Name",
   "welcome": "Welcome",

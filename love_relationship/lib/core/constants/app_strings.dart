@@ -5,4 +5,5 @@ abstract class AppStrings {
   static const homeRoute = '/home';
   static const editUserRoute = '/edit-user';
   static const shellRoute = '/shell';
+  static const forgotPasswordRoute = '/forgot-password';
 }

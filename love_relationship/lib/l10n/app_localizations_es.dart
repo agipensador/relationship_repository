@@ -27,6 +27,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get passwordHint => 'Contraseña';
 
   @override
+  String get emailSentForgotPassword => 'Correo electrónico enviado a';
+
+  @override
   String get forgotPassword => 'Has olvidado tu contraseña';
 
   @override

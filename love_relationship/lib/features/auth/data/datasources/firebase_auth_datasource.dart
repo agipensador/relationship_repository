@@ -64,4 +64,25 @@ class FirebaseAuthDatasource implements AuthDatasource {
   Future<void> logout() async {
     await _firebaseAuth.signOut();
   }
+
+  @override
+  Future<void> forgotPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on fb.FirebaseAuthException catch (e) {
+      // e.code: 'user-not-found', 'invalid-email', etc.
+      switch (e.code) {
+        case 'user-not-found':
+          throw AuthFailure(AuthErrorType.userNotFound);
+        case 'invalid-email':
+          throw AuthFailure(AuthErrorType.invalidCredentials);
+        default:
+          throw AuthFailure(AuthErrorType.unknown);
+      }
+    } on FirebaseException {
+      throw ServerFailure(ServerErrorType.network);
+    } catch (_) {
+      throw ServerFailure(ServerErrorType.unknown);
+    }
+  }
 }

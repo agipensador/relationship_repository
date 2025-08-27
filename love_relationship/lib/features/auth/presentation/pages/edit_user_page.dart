@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
+import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/cubit/auth_state.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
@@ -82,6 +84,7 @@ class _EditUserPageState extends State<EditUserPage> {
                           if (ok) Navigator.pop(context);
                         },
                       ),
+                SizedBox(height: 16),
                 BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
                     if (state.error != null) {
@@ -107,6 +110,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         ? const CircularProgressIndicator()
                         : PrimaryButton(
                             text: 'Logout',
+                            backgroundColor: AppColors.redDefault,
                             onPressed: () => context.read<AuthCubit>().logout(),
                           );
                   },
