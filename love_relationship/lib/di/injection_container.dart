@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/core/services/auth_session.dart';
 
 // Services
@@ -32,6 +35,10 @@ import 'package:love_relationship/features/auth/domain/usecases/watch_user_profi
 import 'package:love_relationship/features/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
+import 'package:love_relationship/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:love_relationship/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:love_relationship/features/notifications/domain/usecases/subscribe_topic_usecase.dart';
+import 'package:love_relationship/features/notifications/domain/usecases/sync_fcm_token_usecase.dart';
 
 final sl = GetIt.instance;
 
@@ -122,9 +129,6 @@ Future<void> init() async {
   }
 
   // ========= CUBITS =========
-  if (!sl.isRegistered<LoginCubit>()) {
-    sl.registerFactory<LoginCubit>(() => LoginCubit(sl<LoginUseCase>()));
-  }
   if (!sl.isRegistered<RegisterCubit>()) {
     sl.registerFactory<RegisterCubit>(
       () => RegisterCubit(sl<RegisterUserUsecase>()),
@@ -163,4 +167,36 @@ Future<void> init() async {
   if (!sl.isRegistered<ForgotPasswordCubit>()) {
     sl.registerFactory(() => ForgotPasswordCubit(sl<ForgotPasswordUseCase>()));
   }
+
+  sl.registerLazySingleton(() => FirebaseMessaging.instance);
+  sl.registerLazySingleton(() => FlutterLocalNotificationsPlugin());
+
+  // await sl<NotificationService>().init();
+  sl.registerLazySingleton(() => NotificationService(sl(), sl()));
+
+  // Repository
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(
+      sl<FirebaseMessaging>(),
+      sl<FirebaseFirestore>(),
+      sl<fb.FirebaseAuth>(),
+    ),
+  );
+
+  // UseCases
+  sl.registerLazySingleton(
+    () => SyncFcmTokenUseCase(sl<NotificationRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => SubscribeTopicUseCase(sl<NotificationRepository>()),
+  );
+
+  // Cubit
+  sl.registerFactory(
+    () => LoginCubit(
+      sl<LoginUseCase>(),
+      sl<SyncFcmTokenUseCase>(),
+      sl<SubscribeTopicUseCase>(),
+    ),
+  );
 }

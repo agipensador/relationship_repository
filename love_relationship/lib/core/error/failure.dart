@@ -8,8 +8,8 @@ enum ServerErrorType {
   unknown,
   createUserError,
   updateUserError,
-  network, 
-  timeout
+  network,
+  timeout,
 }
 
 enum AuthErrorType {
@@ -17,7 +17,7 @@ enum AuthErrorType {
   userNotFound,
   invalidCredentials,
   unauthenticated,
-  emailAlreadyInUse
+  emailAlreadyInUse,
 }
 
 class ServerFailure extends Failure {

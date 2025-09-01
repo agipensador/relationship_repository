@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:love_relationship/core/navigation/app_nav_keys.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
@@ -21,15 +20,6 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  //   late final PersistentTabController _controller;
-
-  //   @override
-  //   void initState() {
-  //     // TODO: implement initState
-  //     _controller = PersistentTabController(initialIndex: 0);
-  //     super.initState();
-  //   }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -49,7 +39,7 @@ class _AppShellState extends State<AppShell> {
           ),
           item: ItemConfig(
             icon: const Icon(Icons.home_outlined),
-            title: l10n.loginTitle, // crie l10n.homeTitle se preferir
+            title: 'Home', // crie l10n.homeTitle se preferir
             activeForegroundColor: AppColors.primary,
             inactiveForegroundColor: AppColors.grayDefault,
           ),
@@ -84,7 +74,8 @@ class _AppShellState extends State<AppShell> {
       ],
       navBarBuilder: (navBarConfig) => Style12BottomNavBar(
         navBarConfig: navBarConfig,
-        // todo Caso queira customizar cores é aqui
+        // Caso queira customizar cores é aqui:
+        // navBarDecoration: ,
       ),
       // A lib já lida com back/stack por tab. Se quiser interceptar back:
       handleAndroidBackButtonPress: true,
