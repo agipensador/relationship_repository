@@ -27,16 +27,16 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(title: Text(l10n.createAccount)),
       body: BlocConsumer<RegisterCubit, RegisterState>(
         listener: (context, state) {
-          if(state.errorMessage != null){
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage!)),
-            );
-          } 
+          if (state.errorMessage != null) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+          }
         },
-        builder: (context, state){
+        builder: (context, state) {
           return Padding(
             padding: EdgeInsetsGeometry.all(24),
-            child: Column(    
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AuthTextField(controller: nameController, hint: l10n.nameHint),
@@ -52,34 +52,40 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscure: true,
                 ),
                 const SizedBox(height: 24),
-                state.isLoading ? CircularProgressIndicator() : 
-                PrimaryButton(
-                  key: const Key('register_button'),
-                  text: l10n.createAccount,
-                  onPressed: () async {
-                    final user = await context.read<RegisterCubit>()
-                    .register(
-                      nameRC: nameController.text,
-                      emailRC: emailController.text, 
-                      passwordRC: passController.text);
+                state.isLoading
+                    ? CircularProgressIndicator()
+                    : PrimaryButton(
+                        key: const Key('register_button'),
+                        text: l10n.createAccount,
+                        onPressed: () async {
+                          final user = await context
+                              .read<RegisterCubit>()
+                              .register(
+                                nameRC: nameController.text,
+                                emailRC: emailController.text,
+                                passwordRC: passController.text,
+                              );
 
-                     if(user != null && context.mounted){
-                      Navigator.pushReplacementNamed(context, AppStrings.homeRoute);
-                     }
-                  }),
+                          if (user != null && context.mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppStrings.shellRoute,
+                            );
+                          }
+                        },
+                      ),
                 const SizedBox(height: 16),
                 SecondaryButton(
                   text: l10n.back,
                   onPressed: () async {
                     Navigator.pop(context);
-                    }
+                  },
                 ),
               ],
             ),
-            
-            );
-        }
-      )
+          );
+        },
+      ),
     );
   }
 }

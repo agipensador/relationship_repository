@@ -27,51 +27,58 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (prev, curr) => !prev.ready && curr.ready,
+      listener: (context, state) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          sl<NotificationService>().requestPermissions();
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text(l10n.welcome)),
+        body: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            if (state.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state.error != null) return Center(child: Text(state.error!));
+            final user = state.user;
+            if (user == null) return Center(child: Text(l10n.userNotFound));
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.welcome)),
-      body: BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
-          if (state.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.error != null) return Center(child: Text(state.error!));
-          final user = state.user;
-          if (user == null) return Center(child: Text(l10n.userNotFound));
-
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Olá, ${user.name}!'),
-                const SizedBox(height: 16),
-                PrimaryButton(
-                  text: l10n.editUser,
-                  onPressed: () async {
-                    Navigator.pushNamed(context, AppStrings.editUserRoute);
-                  },
-                ),
-                SizedBox(height: 12),
-                PrimaryButton(
-                  text: 'Testar Notificação Local',
-                  onPressed: () async {
-                    final ok = await sl<NotificationService>().showLocal(
-                      title: 'Teste',
-                      body: 'Local notification',
-                    );
-                    if (!ok && context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Falha ao exibir notificação'),
-                        ),
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Olá, ${user.name}!'),
+                  const SizedBox(height: 16),
+                  PrimaryButton(
+                    text: l10n.editUser,
+                    onPressed: () async {
+                      Navigator.pushNamed(context, AppStrings.editUserRoute);
+                    },
+                  ),
+                  SizedBox(height: 12),
+                  PrimaryButton(
+                    text: 'Testar Notificação Local',
+                    onPressed: () async {
+                      final ok = await sl<NotificationService>().showLocal(
+                        title: 'Teste',
+                        body: 'Local notification',
                       );
-                    }
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+                      if (!ok && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Falha ao exibir notificação'),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

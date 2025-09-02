@@ -12,8 +12,12 @@ class HomeCubit extends Cubit<HomeState> {
   final WatchUserProfileUsecase watchUserProfileUsecase;
 
   StreamSubscription? _streamSubscription;
-  
-  HomeCubit(this.getUserProfileUsecase, this.watchUserProfileUsecase, this.authSession) : super(HomeState.initial());
+
+  HomeCubit(
+    this.getUserProfileUsecase,
+    this.watchUserProfileUsecase,
+    this.authSession,
+  ) : super(HomeState.initial());
 
   Future<void> loadCurrentUser() async {
     emit(state.copyWith(loading: true, error: null));
@@ -26,11 +30,18 @@ class HomeCubit extends Cubit<HomeState> {
       _streamSubscription = watchUserProfileUsecase(uid).listen((either) {
         either.fold(
           (f) => emit(state.copyWith(error: f.message, loading: false)),
-          (user) => emit(state.copyWith(user: user, loading: false, error: null)),
+          (user) => emit(
+            state.copyWith(
+              user: user,
+              ready: true,
+              loading: false,
+              error: null,
+            ),
+          ),
         );
       });
     } catch (e) {
-        emit(state.copyWith(loading: false, error: e.toString()));
+      emit(state.copyWith(loading: false, error: e.toString()));
     }
     // Ou apenas carregamento pontual:
     // final res = await getUser(uid);
@@ -38,7 +49,8 @@ class HomeCubit extends Cubit<HomeState> {
     //   (f) => emit(state.copyWith(error: f.message, loading: false)),
     //   (user) => emit(state.copyWith(user: user, loading: false)),
     // );
-    }
+  }
+
   @override
   Future<void> close() async {
     await _streamSubscription?.cancel();
