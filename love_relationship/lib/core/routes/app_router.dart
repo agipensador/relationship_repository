@@ -14,10 +14,13 @@ import 'package:love_relationship/features/auth/presentation/pages/forgot_passwo
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/login_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
+import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
+import 'package:love_relationship/features/games/presentation/pages/games_page.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      // LOGIN
       case '/':
       case AppStrings.loginRoute:
         return MaterialPageRoute(
@@ -26,6 +29,7 @@ class AppRouter {
             child: const LoginPage(),
           ),
         );
+      // REGISTRAR
       case AppStrings.registerRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -33,6 +37,7 @@ class AppRouter {
             child: const RegisterPage(),
           ),
         );
+      // HOME
       case AppStrings.homeRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -40,6 +45,7 @@ class AppRouter {
             child: const HomePage(),
           ),
         );
+      // EDITAR USUARIO
       case AppStrings.editUserRoute:
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -50,6 +56,7 @@ class AppRouter {
             child: const EditUserPage(),
           ),
         );
+      // ESQUECI SENHA
       case AppStrings.forgotPasswordRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
@@ -57,9 +64,18 @@ class AppRouter {
             child: const ForgotPasswordPage(),
           ),
         );
-
+      // BOTTOM NAV
       case AppStrings.shellRoute:
         return MaterialPageRoute(builder: (_) => const AppShell());
+      // GAMES
+      case AppStrings.gamesRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => sl<GamesCubit>(),
+            child: const GamesPage(),
+          ),
+        );
+      // SE ROTA NÃO ENCONTRADA
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

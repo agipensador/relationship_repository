@@ -9,6 +9,8 @@ import 'package:love_relationship/features/auth/presentation/cubit/register_cubi
 import 'package:love_relationship/features/auth/presentation/pages/edit_user_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
+import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
+import 'package:love_relationship/features/games/presentation/pages/games_page.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
@@ -32,6 +34,7 @@ class _AppShellState extends State<AppShell> {
 
     return PersistentTabView(
       tabs: [
+        // HOME
         PersistentTabConfig(
           screen: BlocProvider(
             create: (_) => sl<HomeCubit>()..loadCurrentUser(),
@@ -44,6 +47,20 @@ class _AppShellState extends State<AppShell> {
             inactiveForegroundColor: AppColors.grayDefault,
           ),
         ),
+        // GAMES
+        PersistentTabConfig(
+          screen: BlocProvider(
+            create: (_) => sl<GamesCubit>(),
+            child: const GamesPage(),
+          ),
+          item: ItemConfig(
+            icon: const Icon(Icons.videogame_asset_outlined),
+            title: 'Games',
+            activeForegroundColor: AppColors.primary,
+            inactiveForegroundColor: AppColors.grayDefault,
+          ),
+        ),
+        // ADICIONAR PESSOA
         PersistentTabConfig(
           screen: BlocProvider(
             create: (_) => sl<RegisterCubit>(),
@@ -56,6 +73,7 @@ class _AppShellState extends State<AppShell> {
             inactiveForegroundColor: AppColors.grayDefault,
           ),
         ),
+        // EDITAR
         PersistentTabConfig(
           screen: MultiBlocProvider(
             providers: [

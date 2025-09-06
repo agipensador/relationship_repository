@@ -35,6 +35,8 @@ import 'package:love_relationship/features/auth/domain/usecases/watch_user_profi
 import 'package:love_relationship/features/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
+import 'package:love_relationship/features/games/domain/usecases/get_games_usecase.dart';
+import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
 import 'package:love_relationship/features/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:love_relationship/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:love_relationship/features/notifications/domain/usecases/subscribe_topic_usecase.dart';
@@ -199,4 +201,10 @@ Future<void> init() async {
       sl<SubscribeTopicUseCase>(),
     ),
   );
+
+  // USE CASE
+  sl.registerLazySingleton(() => GetGamesUsecase());
+
+  // CUBIT
+  sl.registerFactory(() => GamesCubit(sl()));
 }
