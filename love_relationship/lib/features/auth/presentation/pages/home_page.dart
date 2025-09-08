@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
       await sl<NotificationService>().requestPermissions();
     });
 
+    // ADS
     final isPremium = sl<PremiumCubit>().state.isPremium;
     if (!isPremium) {
       // sem await para não travar UI
@@ -90,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
+                  // ADS
                   // INTERSTICIAL EXEMPLO
                   // PrimaryButton(
                   //   text: 'Ir para EditUSer(INTERSTICIAL)',
