@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/ads/premium_cubit.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/di/injection_container.dart';
+import 'package:love_relationship/features/ads_demo/ads_demo_page.dart' hide sl;
 import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
@@ -56,6 +58,19 @@ class _AppShellState extends State<AppShell> {
           item: ItemConfig(
             icon: const Icon(Icons.videogame_asset_outlined),
             title: 'Games',
+            activeForegroundColor: AppColors.primary,
+            inactiveForegroundColor: AppColors.grayDefault,
+          ),
+        ),
+        // ADS
+        PersistentTabConfig(
+          screen: BlocProvider(
+            create: (_) => sl<PremiumCubit>(),
+            child: const AdsDemoPage(),
+          ),
+          item: ItemConfig(
+            icon: const Icon(Icons.abc),
+            title: 'Ads',
             activeForegroundColor: AppColors.primary,
             inactiveForegroundColor: AppColors.grayDefault,
           ),

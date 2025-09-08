@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/ads/premium_cubit.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/navigation/app_shell.dart';
 import 'package:love_relationship/di/injection_container.dart';
@@ -51,7 +52,7 @@ class AppRouter {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => sl<EditUserCubit>()..load()),
-              BlocProvider(create: (_) => sl<AuthCubit>()), // <— aqui
+              BlocProvider(create: (_) => sl<AuthCubit>()),
             ],
             child: const EditUserPage(),
           ),
@@ -66,7 +67,14 @@ class AppRouter {
         );
       // BOTTOM NAV
       case AppStrings.shellRoute:
-        return MaterialPageRoute(builder: (_) => const AppShell());
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<PremiumCubit>.value(value: sl<PremiumCubit>()),
+            ],
+            child: AppShell(),
+          ),
+        );
       // GAMES
       case AppStrings.gamesRoute:
         return MaterialPageRoute(

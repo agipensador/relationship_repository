@@ -53,5 +53,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-5858677157354036~2130987974</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<!-- (Opcional) SKAdNetwork IDs das redes mediadas -->
+	</array>
+
 </dict>
 </plist>

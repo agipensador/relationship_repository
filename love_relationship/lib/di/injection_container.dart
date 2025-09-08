@@ -4,6 +4,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:love_relationship/core/ads/ad_ids.dart';
+import 'package:love_relationship/core/ads/ads_service.dart';
+import 'package:love_relationship/core/ads/premium_cubit.dart';
+import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
+import 'package:love_relationship/core/ads/repositories/premium_repository.dart';
+import 'package:love_relationship/core/ads/repositories/premium_repository_impl.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/core/services/auth_session.dart';
 
@@ -207,4 +213,16 @@ Future<void> init() async {
 
   // CUBIT
   sl.registerFactory(() => GamesCubit(sl()));
+
+  // ADS
+  // IDs (dev/prod)
+  sl.registerLazySingleton<AdIds>(() => AdIdsProd());
+
+  // Ads repo (SDK)
+  sl.registerLazySingleton<AdsRepository>(() => AdsService());
+  await sl<AdsRepository>().init();
+
+  // PREMIUM
+  sl.registerLazySingleton<PremiumRepository>(() => PremiumRepositoryImpl());
+  sl.registerSingleton<PremiumCubit>(PremiumCubit(sl())..load());
 }
