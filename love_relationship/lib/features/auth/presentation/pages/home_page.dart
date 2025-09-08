@@ -30,15 +30,15 @@ class _HomePageState extends State<HomePage> {
     });
 
     // ADS
-    final isPremium = sl<PremiumCubit>().state.isPremium;
-    if (!isPremium) {
-      // sem await para não travar UI
-      ads.loadInterstitial(ids.interstitialHome);
-      ads.loadRewarded(ids.reward);
-    }
-    sl.registerLazySingleton<AdsFacade>(
-      () => AdsFacade(sl<AdsRepository>(), sl<PremiumCubit>()),
-    );
+    // final isPremium = sl<PremiumCubit>().state.isPremium;
+    // if (!isPremium) {
+    //   // sem await para não travar UI
+    //   ads.loadInterstitial(ids.interstitialHome);
+    //   ads.loadRewarded(ids.reward);
+    // }
+    // sl.registerLazySingleton<AdsFacade>(
+    //   () => AdsFacade(sl<AdsRepository>(), sl<PremiumCubit>()),
+    // );
   }
 
   @override
