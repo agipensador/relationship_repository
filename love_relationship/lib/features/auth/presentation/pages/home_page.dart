@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/ads/ad_ids.dart';
+import 'package:love_relationship/core/ads/ads_facade.dart';
+import 'package:love_relationship/core/ads/premium_cubit.dart';
+import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
-import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_state.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
@@ -16,12 +19,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ads = sl<AdsRepository>();
+  final ids = sl<AdIds>();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await sl<NotificationService>().requestPermissions();
     });
+
+    final isPremium = sl<PremiumCubit>().state.isPremium;
+    if (!isPremium) {
+      // sem await para não travar UI
+      ads.loadInterstitial(ids.interstitialHome);
+      ads.loadRewarded(ids.reward);
+    }
+    sl.registerLazySingleton<AdsFacade>(
+      () => AdsFacade(sl<AdsRepository>(), sl<PremiumCubit>()),
+    );
   }
 
   @override
@@ -74,6 +90,20 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
+                  // INTERSTICIAL EXEMPLO
+                  // PrimaryButton(
+                  //   text: 'Ir para EditUSer(INTERSTICIAL)',
+                  //   onPressed: () async {
+                  //     // tenta interstitial (não bloqueia a navegação se falhar)
+                  //     await sl<AdsFacade>().maybeShowInterstitial(
+                  //       sl<AdIds>().interstitialHome,
+                  //     );
+
+                  //     // segue o fluxo normal da sua tela
+                  //     if (!mounted) return;
+                  //     Navigator.pushNamed(context, AppStrings.editUserRoute);
+                  //   },
+                  // ),
                 ],
               ),
             );

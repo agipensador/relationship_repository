@@ -5,6 +5,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:love_relationship/core/ads/ad_ids.dart';
 import 'package:love_relationship/core/ads/premium_cubit.dart';
 import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
+import 'package:love_relationship/core/ads/widgets/ad_banner_slot.dart';
+import 'package:love_relationship/features/auth/domain/entities/premium_tier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.I;
@@ -89,98 +91,96 @@ class _AdsDemoPageState extends State<AdsDemoPage> {
                   trailing: Switch(
                     value: isPremium,
                     onChanged: (value) async {
-                      await context.read<PremiumCubit>().set(value);
                       // saiu do premium -> pode preparar (carregar) anúncios
+                      // todo premium ou nao
                       if (!value) {
+                        await context.read<PremiumCubit>().setTier(
+                          PremiumTier.none,
+                        );
                         await _prepareAds(); // Se desativar premium, carrega anuncios
                       }
+                      if (value) {
+                        await context.read<PremiumCubit>().setTier(
+                          // TODO GOLD OU DIAMANT
+                          PremiumTier.gold,
+                        );
+                      }
+
                       // virou premium -> limpe e oculte anúncios
                       _bannerTop?.dispose();
                       _bannerTop = null;
                       _bannerBottom?.dispose();
                       _bannerBottom = null;
-                      // setState(() {}); // força atualizar
                     },
                   ),
                 ),
 
-                // Banner Top
-                // SE FOR O ÚNICO AD NA PÁGINA
-                BlocBuilder<PremiumCubit, PremiumState>(
-                  builder: (context, state) {
-                    if (state.isPremium) return const SizedBox.shrink();
-                    return Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      height: _bannerTop?.size.height.toDouble() ?? 0,
-                      child: _bannerTop == null
-                          ? const SizedBox.shrink()
-                          : AdWidget(ad: _bannerTop!),
-                    );
-                  },
+                // BANNER TOPO (SE NÃO FOR PREMIUM)
+                AdBannerSlot(
+                  adUnitId: ids.bannerTopHome, // troque pelo ID dessa tela
+                  size: AdSize.banner, // ou AdSize.largeBanner etc.
+                  padding: const EdgeInsets.only(top: 8),
                 ),
+
+                Divider(),
 
                 const SizedBox(height: 16),
 
                 // Botões
                 //SE TIVER MAIS
                 if (!isPremium)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        // Reward
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: adsRepository.isRewardedReady
-                                ? () async {
-                                    final ok = await adsRepository.showRewarded(
-                                      onRewarded: (ad, reward) async {
-                                        await _incRewardClicks();
-                                        // Aqui pode dar créditos, liberar feature, premiações...
-                                      },
-                                    );
-                                    // Recarrega para a próxima
-                                    await adsRepository.loadRewarded(
-                                      ids.reward,
-                                    );
-                                  }
-                                : null,
-                            child: Text('Awarded $_rewardClicks'),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Interstitial
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            onPressed: adsRepository.isInterstitialReady
-                                ? () async {
-                                    await adsRepository.showInterstitial();
-                                    await adsRepository.loadInterstitial(
-                                      ids.interstitialHome,
-                                    );
-                                  }
-                                : null,
-                            child: const Text('Intersticial'),
-                          ),
-                        ),
-
-                        // Banner Bottom
-                        if (!isPremium)
-                          Container(
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          // Reward
+                          SizedBox(
                             width: double.infinity,
-                            alignment: Alignment.center,
-                            height: _bannerBottom?.size.height.toDouble() ?? 0,
-                            child: _bannerBottom == null
-                                ? const SizedBox.shrink()
-                                : AdWidget(ad: _bannerBottom!),
+                            child: ElevatedButton(
+                              onPressed: adsRepository.isRewardedReady
+                                  ? () async {
+                                      final ok = await adsRepository.showRewarded(
+                                        onRewarded: (ad, reward) async {
+                                          await _incRewardClicks();
+                                          // Aqui pode dar créditos, liberar feature, premiações...
+                                        },
+                                      );
+                                      // Recarrega para a próxima
+                                      await adsRepository.loadRewarded(
+                                        ids.reward,
+                                      );
+                                    }
+                                  : null,
+                              child: Text('Awarded $_rewardClicks'),
+                            ),
                           ),
-                      ],
+                          const SizedBox(height: 12),
+
+                          // Interstitial
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: adsRepository.isInterstitialReady
+                                  ? () async {
+                                      await adsRepository.showInterstitial();
+                                      await adsRepository.loadInterstitial(
+                                        ids.interstitialHome,
+                                      );
+                                    }
+                                  : null,
+                              child: const Text('Intersticial'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                AdBannerSlot(
+                  adUnitId: ids.bannerBottomHome, // troque pelo ID dessa tela
+                  size: AdSize.banner, // ou AdSize.largeBanner etc.
+                  padding: const EdgeInsets.only(top: 8),
+                ),
               ],
             ),
           );

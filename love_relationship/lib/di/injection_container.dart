@@ -8,8 +8,6 @@ import 'package:love_relationship/core/ads/ad_ids.dart';
 import 'package:love_relationship/core/ads/ads_service.dart';
 import 'package:love_relationship/core/ads/premium_cubit.dart';
 import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
-import 'package:love_relationship/core/ads/repositories/premium_repository.dart';
-import 'package:love_relationship/core/ads/repositories/premium_repository_impl.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/core/services/auth_session.dart';
 
@@ -223,6 +221,7 @@ Future<void> init() async {
   await sl<AdsRepository>().init();
 
   // PREMIUM
-  sl.registerLazySingleton<PremiumRepository>(() => PremiumRepositoryImpl());
-  sl.registerSingleton<PremiumCubit>(PremiumCubit(sl())..load());
+  sl.registerSingleton<PremiumCubit>(
+    PremiumCubit(sl<UserRepository>(), sl<fb.FirebaseAuth>())..load(),
+  );
 }
