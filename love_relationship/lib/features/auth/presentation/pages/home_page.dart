@@ -9,6 +9,7 @@ import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
 import 'package:love_relationship/features/auth/presentation/cubit/home_state.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
+import 'package:lottie/lottie.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
 
 class HomePage extends StatefulWidget {
@@ -59,6 +60,17 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Lottie heartbeat above greeting
+                  SizedBox(
+                    height: 180,
+                    child: Lottie.asset(
+                      'assets/lottie/heart.json',
+                      repeat: true,
+                      animate: true,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Text('Olá, ${user.name}!'),
                   const SizedBox(height: 16),
                   PrimaryButton(

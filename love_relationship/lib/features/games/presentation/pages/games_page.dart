@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
@@ -84,22 +85,15 @@ class _GamesPageState extends State<GamesPage> {
                   ),
                 ),
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    switchInCurve: Curves.easeInOutCubic,
-                    switchOutCurve: Curves.easeInOutCubic,
-                    transitionBuilder: (child, animation) {
-                      final fade = CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      );
-                      final scale = Tween<double>(
-                        begin: 0.98,
-                        end: 1.0,
-                      ).animate(fade);
-                      return FadeTransition(
-                        opacity: fade,
-                        child: ScaleTransition(scale: scale, child: child),
+                  child: PageTransitionSwitcher(
+                    duration: const Duration(milliseconds: 350),
+                    reverse: !isGrid, // direção consistente ao alternar
+                    transitionBuilder: (child, primary, secondary) {
+                      return FadeThroughTransition(
+                        animation: primary,
+                        secondaryAnimation: secondary,
+                        fillColor: Colors.transparent,
+                        child: child,
                       );
                     },
                     child: isGrid ? _buildGrid(state) : _buildCarousel(state),

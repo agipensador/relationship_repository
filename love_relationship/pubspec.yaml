@@ -52,6 +52,8 @@ dependencies:
   flutter_svg: ^2.2.0
   shared_preferences: ^2.5.3
   google_mobile_ads: ^6.0.0
+  lottie: ^3.1.2
+  animations: ^2.0.11
   
 dev_dependencies:
   flutter_test:
@@ -80,7 +82,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
-
+    - assets/lottie/heart.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
