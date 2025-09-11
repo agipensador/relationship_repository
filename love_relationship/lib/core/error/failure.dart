@@ -16,6 +16,8 @@ enum AuthErrorType {
   unknown,
   userNotFound,
   invalidCredentials,
+  invalidEmail,
+  wrongPassword,
   unauthenticated,
   emailAlreadyInUse,
 }

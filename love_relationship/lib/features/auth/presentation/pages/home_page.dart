@@ -25,9 +25,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await sl<NotificationService>().requestPermissions();
-    });
 
     // ADS
     // final isPremium = sl<PremiumCubit>().state.isPremium;
@@ -46,11 +43,7 @@ class _HomePageState extends State<HomePage> {
     final l10n = AppLocalizations.of(context)!;
     return BlocListener<HomeCubit, HomeState>(
       listenWhen: (prev, curr) => !prev.ready && curr.ready,
-      listener: (context, state) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          sl<NotificationService>().requestPermissions();
-        });
-      },
+      listener: (context, state) {},
       child: Scaffold(
         appBar: AppBar(title: Text(l10n.welcome)),
         body: BlocBuilder<HomeCubit, HomeState>(

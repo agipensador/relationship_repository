@@ -81,5 +81,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invalidCredentials => 'Credenciais inválidas';
 
   @override
+  String get invalidEmail => 'O e-mail informado está errado';
+
+  @override
+  String get wrongPassword => 'A senha informada está errada';
+
+  @override
   String get loginTitle => 'Login';
 }

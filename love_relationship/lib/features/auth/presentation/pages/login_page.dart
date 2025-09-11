@@ -10,9 +10,25 @@ import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/clickable_button.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
 import 'package:love_relationship/shared/widgets/secondary_button.dart';
+import 'package:love_relationship/core/notifications/notification_service.dart';
+import 'package:love_relationship/di/injection_container.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Exibe prompt de permissão quando a UI de login já carregou
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      sl<NotificationService>().requestPermissions();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -94,12 +94,7 @@ class NotificationService {
     );
     await _flutterLocalNotificationsPlugin.initialize(init);
 
-    // Android 13+ (v17+ do plugin)
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
+    // Importante: não solicitar permissões aqui. Apenas configuração.
 
     // Cria canal antes de qualquer show
     const channel = AndroidNotificationChannel(
@@ -146,6 +141,13 @@ class NotificationService {
 
   /// Pede permissões (chamar após 1º frame / quando a UI já apareceu)
   Future<void> requestPermissions() async {
+    // Android 13+: solicita permissão de notificação em runtime
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.requestNotificationsPermission();
+
     await _firebaseMessaging.requestPermission(
       alert: true,
       badge: true,

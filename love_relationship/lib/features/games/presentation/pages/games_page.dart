@@ -14,6 +14,7 @@ class GamesPage extends StatefulWidget {
 
 class _GamesPageState extends State<GamesPage> {
   late final PageController _pageController;
+  static const double _carouselHeight = 500;
 
   @override
   void initState() {
@@ -84,9 +85,23 @@ class _GamesPageState extends State<GamesPage> {
                 ),
                 Expanded(
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 1000),
-                    switchInCurve: Curves.bounceIn,
-                    switchOutCurve: Curves.bounceOut,
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeInOutCubic,
+                    switchOutCurve: Curves.easeInOutCubic,
+                    transitionBuilder: (child, animation) {
+                      final fade = CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      );
+                      final scale = Tween<double>(
+                        begin: 0.98,
+                        end: 1.0,
+                      ).animate(fade);
+                      return FadeTransition(
+                        opacity: fade,
+                        child: ScaleTransition(scale: scale, child: child),
+                      );
+                    },
                     child: isGrid ? _buildGrid(state) : _buildCarousel(state),
                   ),
                 ),
@@ -99,40 +114,49 @@ class _GamesPageState extends State<GamesPage> {
   }
 
   Widget _buildGrid(GamesState state) {
-    return GridView.builder(
-      key: const ValueKey('grid'),
-      padding: const EdgeInsets.all(16),
-      itemCount: state.items.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // 2 cards por linha
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.88, // ajusta proporção do card
+    return Align(
+      alignment: Alignment.center,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 720),
+        child: GridView.builder(
+          key: const ValueKey('grid'),
+          padding: const EdgeInsets.all(16),
+          itemCount: state.items.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 2 cards por linha
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.88, // ajusta proporção do card
+          ),
+          itemBuilder: (_, i) {
+            final game = state.items[i];
+            return GameCard(gameEntity: game, onTap: () => _onGameTap(game));
+          },
+        ),
       ),
-      itemBuilder: (_, i) {
-        final game = state.items[i];
-        return GameCard(gameEntity: game, onTap: () => _onGameTap(game));
-      },
     );
   }
 
   Widget _buildCarousel(GamesState state) {
-    return PageView.builder(
-      key: const ValueKey('carousel'),
-      controller: _pageController,
-      itemCount: state.items.length,
-      padEnds: true,
-      physics: const BouncingScrollPhysics(),
-      itemBuilder: (context, index) {
-        final game = state.items[index];
-        return SizedBox(
-          height: 120,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 8, bottom: 8),
-            child: GameCard(gameEntity: game, onTap: () => _onGameTap(game)),
-          ),
-        );
-      },
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: _carouselHeight, // altura configurável solicitada
+        child: PageView.builder(
+          key: const ValueKey('carousel'),
+          controller: _pageController,
+          itemCount: state.items.length,
+          padEnds: true,
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            final game = state.items[index];
+            return Padding(
+              padding: const EdgeInsets.only(left: 16, right: 8, bottom: 8),
+              child: GameCard(gameEntity: game, onTap: () => _onGameTap(game)),
+            );
+          },
+        ),
+      ),
     );
   }
 

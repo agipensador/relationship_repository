@@ -43,21 +43,43 @@ class FirebaseAuthDatasource implements AuthDatasource {
     required String email,
     required String password,
   }) async {
-    final result = await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      final result = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    final user = result.user;
-    if (user == null) throw AuthFailure(AuthErrorType.userNotFound);
-    print('gio: login ${user.displayName}');
+      final user = result.user;
+      if (user == null) throw AuthFailure(AuthErrorType.userNotFound);
+      print('gio: login ${user.displayName}');
 
-    await user.reload();
-    return UserModel(
-      id: user.uid,
-      name: user.displayName ?? '',
-      email: user.email ?? '',
-    );
+      await user.reload();
+      return UserModel(
+        id: user.uid,
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+      );
+    } on fb.FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'invalid-email':
+          throw AuthFailure(AuthErrorType.invalidEmail, message: e.message);
+        case 'wrong-password':
+          throw AuthFailure(AuthErrorType.wrongPassword, message: e.message);
+        case 'missing-password':
+          throw AuthFailure(AuthErrorType.wrongPassword, message: e.message);
+        case 'invalid-credential':
+          // Firebase pode retornar esse código genérico para email/senha inválidos
+          throw AuthFailure(AuthErrorType.wrongPassword, message: e.message);
+        case 'user-not-found':
+          throw AuthFailure(AuthErrorType.userNotFound, message: e.message);
+        case 'network-request-failed':
+          throw ServerFailure(ServerErrorType.network, message: e.message);
+        default:
+          throw AuthFailure(AuthErrorType.unknown, message: e.message);
+      }
+    } on FirebaseException {
+      throw ServerFailure(ServerErrorType.network);
+    }
   }
 
   @override
@@ -75,7 +97,7 @@ class FirebaseAuthDatasource implements AuthDatasource {
         case 'user-not-found':
           throw AuthFailure(AuthErrorType.userNotFound);
         case 'invalid-email':
-          throw AuthFailure(AuthErrorType.invalidCredentials);
+          throw AuthFailure(AuthErrorType.invalidEmail);
         default:
           throw AuthFailure(AuthErrorType.unknown);
       }

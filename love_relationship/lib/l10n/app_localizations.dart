@@ -241,6 +241,18 @@ abstract class AppLocalizations {
   /// **'Invalid Credentials'**
   String get invalidCredentials;
 
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'The email entered is invalid'**
+  String get invalidEmail;
+
+  /// No description provided for @wrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'The password entered is incorrect'**
+  String get wrongPassword;
+
   /// No description provided for @loginTitle.
   ///
   /// In en, this message translates to:
