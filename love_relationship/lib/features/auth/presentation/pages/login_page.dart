@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/login_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/login/login_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/login/login_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_image_header.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
               AuthTextField(
                 controller: emailController,
                 hint: l10n.emailHint,
-                onChanged: context.read<LoginCubit>().onEmailChanged,
+                onChanged: (v) => context.read<LoginBloc>().add(LoginEmailChanged(v)),
               ),
 
               const SizedBox(height: 16),
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: passwordController,
                 hint: l10n.passwordHint,
                 obscure: true,
-                onChanged: context.read<LoginCubit>().onPasswordChanged,
+                onChanged: (v) => context.read<LoginBloc>().add(LoginPasswordChanged(v)),
               ),
               const SizedBox(height: 4),
               Align(
@@ -73,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               //BLoC
-              BlocConsumer<LoginCubit, LoginState>(
+              BlocConsumer<LoginBloc, LoginState>(
                 listener: (context, state) {
                   if (state.error != null) {
                     final msg = failureToMessage(context, state.error!);
@@ -102,8 +103,9 @@ class _LoginPageState extends State<LoginPage> {
                             PrimaryButton(
                               key: Key('login_button'),
                               text: l10n.btnAccess,
-                              onPressed: () =>
-                                  context.read<LoginCubit>().login(),
+                              onPressed: () async {
+                                context.read<LoginBloc>().add(const LoginSubmitted());
+                              },
                             ),
                             SizedBox(height: 16),
                             SecondaryButton(

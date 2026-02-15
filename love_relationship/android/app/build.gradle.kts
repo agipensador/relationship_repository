@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.io.File
 import java.io.FileInputStream
 
 plugins {
@@ -48,10 +49,29 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            // applicationIdSuffix removido: todos os flavors usam o mesmo package para google-services.json
+            versionNameSuffix = "-dev"
+            resValue("string", "app_name", "Love Relationship (DEV)")
+        }
+        create("qa") {
+            dimension = "environment"
+            // applicationIdSuffix removido: todos os flavors usam o mesmo package para google-services.json
+            versionNameSuffix = "-qa"
+            resValue("string", "app_name", "Love Relationship (QA)")
+        }
+        create("prod") {
+            dimension = "environment"
+            resValue("string", "app_name", "Love Relationship")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.always.about.love.love_relationship"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
         targetSdk = flutter.targetSdkVersion.toInt()
         versionCode = flutterVersionCode
@@ -70,6 +90,8 @@ android {
         }
     }
 
+    val hasReleaseKeystore = keystoreProperties["storeFile"]?.toString() != null
+
     buildTypes {
 
         // debug sempre sem shrink
@@ -79,10 +101,15 @@ android {
         }
 
         // release sem shrink por enquanto (mais simples p/ rodar)
+        // Usa assinatura release se key.properties existir; senão usa debug (para dev/teste)
         getByName("release") {
             isMinifyEnabled = false
             isShrinkResources = false
-            signingConfig = signingConfigs.findByName("release")
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.findByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
 
         // Flutter costuma ter o buildType "profile"; garanta que também não encolha:
@@ -92,8 +119,26 @@ android {
             isShrinkResources = false
         }
     }
+
 }
 
 flutter {
     source = "../.."
 }
+
+// Quando Flutter roda sem --flavor, ele procura app-debug.apk. Com product flavors,
+// o output é app-dev-debug.apk, app-qa-debug.apk, etc. Copiamos app-dev-debug.apk
+// para app-debug.apk para que "flutter run" (sem --flavor) funcione.
+afterEvaluate {
+    tasks.named("assembleDebug") {
+        doLast {
+            val flutterApkDir = layout.buildDirectory.dir("outputs/flutter-apk").get().asFile
+            val src = File(flutterApkDir, "app-dev-debug.apk")
+            val dest = File(flutterApkDir, "app-debug.apk")
+            if (src.exists()) {
+                src.copyTo(dest, overwrite = true)
+            }
+        }
+    }
+}
+

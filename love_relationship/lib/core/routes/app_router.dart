@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:love_relationship/core/ads/premium_cubit.dart';
+import 'package:love_relationship/core/ads/bloc/premium_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/navigation/app_shell.dart';
 import 'package:love_relationship/di/injection_container.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/forgot_password_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/pages/edit_user_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/login_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
-import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
+import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
 import 'package:love_relationship/features/games/presentation/pages/games_page.dart';
 
 class AppRouter {
@@ -26,7 +28,7 @@ class AppRouter {
       case AppStrings.loginRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => sl<LoginCubit>(),
+            create: (_) => sl<LoginBloc>(),
             child: const LoginPage(),
           ),
         );
@@ -34,7 +36,7 @@ class AppRouter {
       case AppStrings.registerRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => sl<RegisterCubit>(),
+            create: (_) => sl<RegisterBloc>(),
             child: const RegisterPage(),
           ),
         );
@@ -42,7 +44,7 @@ class AppRouter {
       case AppStrings.homeRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => sl<HomeCubit>()..loadCurrentUser(),
+            create: (_) => sl<HomeBloc>()..add(const HomeLoadCurrentUser()),
             child: const HomePage(),
           ),
         );
@@ -51,8 +53,8 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => sl<EditUserCubit>()..load()),
-              BlocProvider(create: (_) => sl<AuthCubit>()),
+              BlocProvider(create: (_) => sl<EditUserBloc>()..add(const EditUserLoad())),
+              BlocProvider(create: (_) => sl<AuthBloc>()),
             ],
             child: const EditUserPage(),
           ),
@@ -61,7 +63,7 @@ class AppRouter {
       case AppStrings.forgotPasswordRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => sl<ForgotPasswordCubit>(),
+            create: (_) => sl<ForgotPasswordBloc>(),
             child: const ForgotPasswordPage(),
           ),
         );
@@ -70,7 +72,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider<PremiumCubit>.value(value: sl<PremiumCubit>()),
+              BlocProvider<PremiumBloc>.value(value: sl<PremiumBloc>()),
             ],
             child: AppShell(),
           ),
@@ -79,7 +81,7 @@ class AppRouter {
       case AppStrings.gamesRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => sl<GamesCubit>(),
+            create: (_) => sl<GamesBloc>(),
             child: const GamesPage(),
           ),
         );

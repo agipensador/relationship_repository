@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
-import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
+import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
+import 'package:love_relationship/features/games/presentation/bloc/games_event.dart';
 import 'package:love_relationship/features/games/presentation/cubit/games_state.dart';
 import 'package:love_relationship/features/games/presentation/widgets/game_card.dart';
 
@@ -39,7 +40,7 @@ class _GamesPageState extends State<GamesPage> {
         elevation: 2,
         shadowColor: AppColors.primary,
       ),
-      body: BlocBuilder<GamesCubit, GamesState>(
+      body: BlocBuilder<GamesBloc, GamesState>(
         builder: (context, state) {
           if (state.loading) {
             return const Center(child: CircularProgressIndicator());
@@ -78,7 +79,7 @@ class _GamesPageState extends State<GamesPage> {
                                 ? Icons.view_carousel_outlined
                                 : Icons.grid_view_sharp,
                           ),
-                          onPressed: context.read<GamesCubit>().toggleView,
+                          onPressed: () => context.read<GamesBloc>().add(const GamesToggleViewRequested()),
                         ),
                       ],
                     ),

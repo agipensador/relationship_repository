@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/auth_state.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/edit_user_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
@@ -22,12 +24,6 @@ class _EditUserPageState extends State<EditUserPage> {
   final nameController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    context.read<EditUserCubit>().load();
-  }
-
-  @override
   void dispose() {
     nameController.dispose();
     super.dispose();
@@ -39,7 +35,7 @@ class _EditUserPageState extends State<EditUserPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.editUser)),
-      body: BlocConsumer<EditUserCubit, EditUserState>(
+      body: BlocConsumer<EditUserBloc, EditUserState>(
         listener: (context, state) {
           // manter controller sincronizado com o draft carregado
           if (state.current != null && nameController.text != state.nameDraft) {
@@ -50,6 +46,13 @@ class _EditUserPageState extends State<EditUserPage> {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(msg)));
+          }
+          if (state.saveSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.savedSuccess)),
+            );
+            context.read<EditUserBloc>().add(const EditUserClearSaveSuccess());
+            Navigator.pop(context);
           }
         },
         builder: (context, state) {
@@ -66,7 +69,7 @@ class _EditUserPageState extends State<EditUserPage> {
                   hint: state.current?.name?.isNotEmpty == true
                       ? state.current!.name!
                       : l10n.editNameHint,
-                  onChanged: context.read<EditUserCubit>().onNameChanged,
+                  onChanged: (v) => context.read<EditUserBloc>().add(EditUserNameChanged(v)),
                 ),
                 const SizedBox(height: 24),
                 state.loading
@@ -75,27 +78,17 @@ class _EditUserPageState extends State<EditUserPage> {
                         key: const Key('edit_user_save_button'),
                         text: l10n.save,
                         onPressed: () async {
-                          final ok = await context.read<EditUserCubit>().save();
-                          if (!mounted) return;
-                          final msg = ok ? l10n.savedSuccess : l10n.saveError;
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text(msg)));
-                          if (ok) Navigator.pop(context);
+                          context.read<EditUserBloc>().add(const EditUserSave());
                         },
                       ),
                 SizedBox(height: 16),
-                BlocConsumer<AuthCubit, AuthState>(
+                BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state.error != null) {
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text(state.error!)));
                     } else if (state.loggedOut) {
-                      // Navigator.pushReplacementNamed(
-                      //   context,
-                      //   AppStrings.loginRoute,
-                      // );
                       Navigator.of(
                         context,
                         rootNavigator: true,
@@ -111,7 +104,9 @@ class _EditUserPageState extends State<EditUserPage> {
                         : PrimaryButton(
                             text: 'Logout',
                             backgroundColor: AppColors.redDefault,
-                            onPressed: () => context.read<AuthCubit>().logout(),
+                            onPressed: () async {
+                              context.read<AuthBloc>().add(const AuthLogoutRequested());
+                            },
                           );
                   },
                 ),

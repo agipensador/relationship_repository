@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:get_it/get_it.dart';
 import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
-import '../premium_cubit.dart';
+import 'package:love_relationship/core/ads/bloc/premium_bloc.dart';
+import 'package:love_relationship/core/ads/bloc/premium_state.dart';
 
 final sl = GetIt.I;
 
@@ -37,7 +38,7 @@ class _AdBannerSlotState extends State<AdBannerSlot> {
   }
 
   Future<void> _maybeLoad() async {
-    final isPremium = sl<PremiumCubit>().state.isPremium;
+    final isPremium = sl<PremiumBloc>().state.isPremium;
     if (isPremium) return; // não carrega
 
     final loaded = await sl<AdsRepository>().loadBanner(
@@ -71,7 +72,7 @@ class _AdBannerSlotState extends State<AdBannerSlot> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PremiumCubit, PremiumState>(
+    return BlocBuilder<PremiumBloc, PremiumState>(
       buildWhen: (p, c) => p.isPremium != c.isPremium,
       builder: (context, state) {
         if (state.isPremium) {

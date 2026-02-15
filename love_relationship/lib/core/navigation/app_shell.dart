@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:love_relationship/core/ads/premium_cubit.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/ads_demo/ads_demo_page.dart' hide sl;
-import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/pages/edit_user_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
-import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
+import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
 import 'package:love_relationship/features/games/presentation/pages/games_page.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -39,7 +40,7 @@ class _AppShellState extends State<AppShell> {
         // HOME
         PersistentTabConfig(
           screen: BlocProvider(
-            create: (_) => sl<HomeCubit>()..loadCurrentUser(),
+            create: (_) => sl<HomeBloc>()..add(const HomeLoadCurrentUser()),
             child: const HomePage(),
           ),
           item: ItemConfig(
@@ -52,7 +53,7 @@ class _AppShellState extends State<AppShell> {
         // GAMES
         PersistentTabConfig(
           screen: BlocProvider(
-            create: (_) => sl<GamesCubit>(),
+            create: (_) => sl<GamesBloc>(),
             child: const GamesPage(),
           ),
           item: ItemConfig(
@@ -64,10 +65,7 @@ class _AppShellState extends State<AppShell> {
         ),
         // ADS
         PersistentTabConfig(
-          screen: BlocProvider(
-            create: (_) => sl<PremiumCubit>(),
-            child: const AdsDemoPage(),
-          ),
+          screen: const AdsDemoPage(),
           item: ItemConfig(
             icon: const Icon(Icons.abc),
             title: 'Ads',
@@ -78,7 +76,7 @@ class _AppShellState extends State<AppShell> {
         // ADICIONAR PESSOA
         PersistentTabConfig(
           screen: BlocProvider(
-            create: (_) => sl<RegisterCubit>(),
+            create: (_) => sl<RegisterBloc>(),
             child: const RegisterPage(),
           ),
           item: ItemConfig(
@@ -92,8 +90,8 @@ class _AppShellState extends State<AppShell> {
         PersistentTabConfig(
           screen: MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => sl<EditUserCubit>()..load()),
-              BlocProvider(create: (_) => sl<AuthCubit>()),
+              BlocProvider(create: (_) => sl<EditUserBloc>()..add(const EditUserLoad())),
+              BlocProvider(create: (_) => sl<AuthBloc>()),
             ],
             child: const EditUserPage(),
           ),

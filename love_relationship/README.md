@@ -1,16 +1,41 @@
 # love_relationship
 
-A new Flutter project.
+Relationship is always about love.
 
-## Getting Started
+## Como rodar o projeto
 
-This project is a starting point for a Flutter application.
+O projeto usa **FVM** e **flavors** (dev, qa, prod). Use os comandos abaixo na raiz do projeto (mesmo nível do `pubspec.yaml`).
 
-A few resources to get you started if this is your first Flutter project:
+### Android
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+# DEV (use -d emulator-5554 se -d android não encontrar o emulador)
+fvm flutter run --flavor dev --target lib/main_dev.dart -d android
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# QA
+fvm flutter run --flavor qa --target lib/main_qa.dart -d android
+
+# PROD (release)
+fvm flutter run --flavor prod --target lib/main_prd.dart -d android --release
+```
+
+### iOS
+
+```bash
+# DEV
+fvm flutter run --flavor dev --target lib/main_dev.dart -d ios
+
+# QA
+fvm flutter run --flavor qa --target lib/main_qa.dart -d ios
+
+# PROD (release)
+fvm flutter run --flavor prod --target lib/main_prd.dart -d ios --release
+```
+
+### macOS
+
+```bash
+# DEV
+fvm flutter run --flavor dev --target lib/main_dev.dart -d macos
+```
+

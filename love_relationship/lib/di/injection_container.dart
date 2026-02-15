@@ -5,8 +5,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:love_relationship/core/ads/ad_ids.dart';
+import 'package:love_relationship/core/network/network_module.dart';
+import 'package:love_relationship/core/network/rest_api.dart';
 import 'package:love_relationship/core/ads/ads_service.dart';
-import 'package:love_relationship/core/ads/premium_cubit.dart';
+import 'package:love_relationship/core/ads/bloc/premium_bloc.dart';
+import 'package:love_relationship/core/ads/bloc/premium_event.dart';
 import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/core/services/auth_session.dart';
@@ -24,10 +27,10 @@ import 'package:love_relationship/features/auth/domain/usecases/forgot_password_
 import 'package:love_relationship/features/auth/domain/usecases/login_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/register_user_usecase.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/forgot_password_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/register/register_bloc.dart';
 
 // USER (profile)
 import 'package:love_relationship/features/auth/data/datasources/user_remote_datasource.dart';
@@ -37,10 +40,10 @@ import 'package:love_relationship/features/auth/domain/repositories/user_reposit
 import 'package:love_relationship/features/auth/domain/usecases/get_user_profile_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/watch_user_profile_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/update_user_profile_usecase.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/edit_user_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
 import 'package:love_relationship/features/games/domain/usecases/get_games_usecase.dart';
-import 'package:love_relationship/features/games/presentation/cubit/games_cubit.dart';
+import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
 import 'package:love_relationship/features/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:love_relationship/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:love_relationship/features/notifications/domain/usecases/subscribe_topic_usecase.dart';
@@ -49,6 +52,13 @@ import 'package:love_relationship/features/notifications/domain/usecases/sync_fc
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // ========= NETWORK (Dio + Retrofit) =========
+  if (!sl.isRegistered<RestClient>()) {
+    sl.registerLazySingleton<RestClient>(
+      () => NetworkModule.getRestClientInstance(),
+    );
+  }
+
   // ========= EXTERNOS =========
   if (!sl.isRegistered<fb.FirebaseAuth>()) {
     sl.registerLazySingleton<fb.FirebaseAuth>(() => fb.FirebaseAuth.instance);
@@ -134,32 +144,32 @@ Future<void> init() async {
     sl.registerLazySingleton(() => LogoutUsecase(sl<LoginRepository>()));
   }
 
-  // ========= CUBITS =========
-  if (!sl.isRegistered<RegisterCubit>()) {
-    sl.registerFactory<RegisterCubit>(
-      () => RegisterCubit(sl<RegisterUserUsecase>()),
+  // ========= BLOCS =========
+  if (!sl.isRegistered<RegisterBloc>()) {
+    sl.registerFactory<RegisterBloc>(
+      () => RegisterBloc(sl<RegisterUserUsecase>()),
     );
   }
-  if (!sl.isRegistered<HomeCubit>()) {
-    sl.registerFactory<HomeCubit>(
-      () => HomeCubit(
+  if (!sl.isRegistered<HomeBloc>()) {
+    sl.registerFactory<HomeBloc>(
+      () => HomeBloc(
         sl<GetUserProfileUsecase>(),
         sl<WatchUserProfileUsecase>(),
         sl<AuthSession>(),
       ),
     );
   }
-  if (!sl.isRegistered<EditUserCubit>()) {
-    sl.registerFactory<EditUserCubit>(
-      () => EditUserCubit(
+  if (!sl.isRegistered<EditUserBloc>()) {
+    sl.registerFactory<EditUserBloc>(
+      () => EditUserBloc(
         sl<AuthSession>(),
         sl<GetUserProfileUsecase>(),
         sl<UpdateUserProfileUsecase>(),
       ),
     );
   }
-  if (!sl.isRegistered<AuthCubit>()) {
-    sl.registerFactory(() => AuthCubit(sl<LogoutUsecase>()));
+  if (!sl.isRegistered<AuthBloc>()) {
+    sl.registerFactory(() => AuthBloc(sl<LogoutUsecase>()));
   }
 
   // UseCase
@@ -169,9 +179,9 @@ Future<void> init() async {
     );
   }
 
-  // Cubit
-  if (!sl.isRegistered<ForgotPasswordCubit>()) {
-    sl.registerFactory(() => ForgotPasswordCubit(sl<ForgotPasswordUseCase>()));
+  // Bloc
+  if (!sl.isRegistered<ForgotPasswordBloc>()) {
+    sl.registerFactory(() => ForgotPasswordBloc(sl<ForgotPasswordUseCase>()));
   }
 
   sl.registerLazySingleton(() => FirebaseMessaging.instance);
@@ -197,9 +207,9 @@ Future<void> init() async {
     () => SubscribeTopicUseCase(sl<NotificationRepository>()),
   );
 
-  // Cubit
+  // Bloc
   sl.registerFactory(
-    () => LoginCubit(
+    () => LoginBloc(
       sl<LoginUseCase>(),
       sl<SyncFcmTokenUseCase>(),
       sl<SubscribeTopicUseCase>(),
@@ -209,8 +219,8 @@ Future<void> init() async {
   // USE CASE
   sl.registerLazySingleton(() => GetGamesUsecase());
 
-  // CUBIT
-  sl.registerFactory(() => GamesCubit(sl()));
+  // BLOC
+  sl.registerFactory(() => GamesBloc(sl()));
 
   // ADS
   // IDs (dev/prod)
@@ -221,7 +231,8 @@ Future<void> init() async {
   await sl<AdsRepository>().init();
 
   // PREMIUM
-  sl.registerSingleton<PremiumCubit>(
-    PremiumCubit(sl<UserRepository>(), sl<fb.FirebaseAuth>())..load(),
+  sl.registerSingleton<PremiumBloc>(
+    PremiumBloc(sl<UserRepository>(), sl<fb.FirebaseAuth>())
+      ..add(const PremiumLoadRequested()),
   );
 }

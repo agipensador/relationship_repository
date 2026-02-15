@@ -5,12 +5,12 @@ allprojects {
     }
 }
 
-val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+// Diretório de build no root do projeto (onde o Flutter espera encontrar o APK)
+rootProject.layout.buildDirectory.set(rootProject.layout.projectDirectory.dir("../build"))
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
+    val newSubprojectBuildDir = rootProject.layout.buildDirectory.get().dir(project.name)
+    project.layout.buildDirectory.set(newSubprojectBuildDir)
     project.evaluationDependsOn(":app")
 }
 

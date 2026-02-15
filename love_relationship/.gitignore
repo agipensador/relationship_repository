@@ -44,5 +44,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# FVM Version Cache
-.fvm/
+# FVM - ignora o symlink do SDK, mantém fvm_config.json versionado
+.fvm/flutter_sdk

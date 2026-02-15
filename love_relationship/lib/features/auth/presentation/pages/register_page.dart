@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/register_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/register/register_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/register/register_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/register/register_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
@@ -25,17 +27,23 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.createAccount)),
-      body: BlocConsumer<RegisterCubit, RegisterState>(
+      body: BlocConsumer<RegisterBloc, RegisterState>(
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
           }
+          if (state.registeredUser != null && context.mounted) {
+            Navigator.pushReplacementNamed(
+              context,
+              AppStrings.shellRoute,
+            );
+          }
         },
         builder: (context, state) {
           return Padding(
-            padding: EdgeInsetsGeometry.all(24),
+            padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -58,20 +66,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         key: const Key('register_button'),
                         text: l10n.createAccount,
                         onPressed: () async {
-                          final user = await context
-                              .read<RegisterCubit>()
-                              .register(
-                                nameRC: nameController.text,
-                                emailRC: emailController.text,
-                                passwordRC: passController.text,
+                          context.read<RegisterBloc>().add(
+                                RegisterSubmitted(
+                                  name: nameController.text,
+                                  email: emailController.text,
+                                  password: passController.text,
+                                ),
                               );
-
-                          if (user != null && context.mounted) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              AppStrings.shellRoute,
-                            );
-                          }
                         },
                       ),
                 const SizedBox(height: 16),

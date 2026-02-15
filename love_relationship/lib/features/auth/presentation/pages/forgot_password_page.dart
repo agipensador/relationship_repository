@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/forgot_password_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
 
-import '../cubit/forgot_password_cubit.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_event.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
@@ -21,7 +22,7 @@ class ForgotPasswordPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.passwordHint),
       ), // crie uma string "Recuperar senha"
-      body: BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
+      body: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
         listener: (context, state) {
           if (state.error != null) {
             final msg = failureToMessage(context, state.error!);
@@ -50,15 +51,16 @@ class ForgotPasswordPage extends StatelessWidget {
                 AuthTextField(
                   controller: emailCtrl,
                   hint: l10n.emailHint,
-                  onChanged: context.read<ForgotPasswordCubit>().onEmailChanged,
+                  onChanged: (v) => context.read<ForgotPasswordBloc>().add(ForgotPasswordEmailChanged(v)),
                 ),
                 const SizedBox(height: 16),
                 state.loading
                     ? const CircularProgressIndicator()
                     : PrimaryButton(
                         text: 'Enviar',
-                        onPressed: () =>
-                            context.read<ForgotPasswordCubit>().send(),
+                        onPressed: () async {
+                          context.read<ForgotPasswordBloc>().add(const ForgotPasswordSendRequested());
+                        },
                       ),
               ],
             ),

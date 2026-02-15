@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/ads/ad_ids.dart';
-import 'package:love_relationship/core/ads/ads_facade.dart';
-import 'package:love_relationship/core/ads/premium_cubit.dart';
+import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/home_cubit.dart';
-import 'package:love_relationship/features/auth/presentation/cubit/home_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/home/home_state.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
@@ -42,12 +41,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return BlocListener<HomeCubit, HomeState>(
+    return BlocListener<HomeBloc, HomeState>(
       listenWhen: (prev, curr) => !prev.ready && curr.ready,
       listener: (context, state) {},
       child: Scaffold(
         appBar: AppBar(title: Text(l10n.welcome)),
-        body: BlocBuilder<HomeCubit, HomeState>(
+        body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             if (state.loading) {
               return const Center(child: CircularProgressIndicator());

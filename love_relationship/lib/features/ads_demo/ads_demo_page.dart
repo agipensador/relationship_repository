@@ -3,7 +3,9 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:love_relationship/core/ads/ad_ids.dart';
-import 'package:love_relationship/core/ads/premium_cubit.dart';
+import 'package:love_relationship/core/ads/bloc/premium_bloc.dart';
+import 'package:love_relationship/core/ads/bloc/premium_event.dart';
+import 'package:love_relationship/core/ads/bloc/premium_state.dart';
 import 'package:love_relationship/core/ads/repositories/ads_repository.dart';
 import 'package:love_relationship/core/ads/widgets/ad_banner_slot.dart';
 import 'package:love_relationship/features/auth/domain/entities/premium_tier.dart';
@@ -43,7 +45,7 @@ class _AdsDemoPageState extends State<AdsDemoPage> {
   }
 
   Future<void> _prepareAds() async {
-    final premium = sl<PremiumCubit>().state.isPremium;
+    final premium = sl<PremiumBloc>().state.isPremium;
     if (premium) return;
 
     final ids = sl<AdIds>();
@@ -76,7 +78,7 @@ class _AdsDemoPageState extends State<AdsDemoPage> {
     final adsRepository = sl<AdsRepository>();
 
     return Scaffold(
-      body: BlocBuilder<PremiumCubit, PremiumState>(
+      body: BlocBuilder<PremiumBloc, PremiumState>(
         buildWhen: (previous, current) =>
             previous.isPremium != current.isPremium,
         builder: (context, premiumState) {
@@ -88,25 +90,17 @@ class _AdsDemoPageState extends State<AdsDemoPage> {
                 //switch Premium global
                 ListTile(
                   title: const Text('Usuário Premium'),
-                  trailing: Switch(
+                    trailing: Switch(
                     value: isPremium,
                     onChanged: (value) async {
-                      // saiu do premium -> pode preparar (carregar) anúncios
-                      // todo premium ou nao
                       if (!value) {
-                        await context.read<PremiumCubit>().setTier(
-                          PremiumTier.none,
-                        );
-                        await _prepareAds(); // Se desativar premium, carrega anuncios
+                        context.read<PremiumBloc>().add(const PremiumSetTierRequested(PremiumTier.none));
+                        await _prepareAds();
                       }
                       if (value) {
-                        await context.read<PremiumCubit>().setTier(
-                          // TODO GOLD OU DIAMANT
-                          PremiumTier.gold,
-                        );
+                        context.read<PremiumBloc>().add(const PremiumSetTierRequested(PremiumTier.gold));
                       }
 
-                      // virou premium -> limpe e oculte anúncios
                       _bannerTop?.dispose();
                       _bannerTop = null;
                       _bannerBottom?.dispose();
