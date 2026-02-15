@@ -51,14 +51,19 @@ class FirebaseAuthDatasource implements AuthDatasource {
 
       final user = result.user;
       if (user == null) throw AuthFailure(AuthErrorType.userNotFound);
-      print('gio: login ${user.displayName}');
 
       await user.reload();
-      return UserModel(
+      final userModel = UserModel(
         id: user.uid,
-        name: user.displayName ?? '',
+        name: user.displayName ?? user.email?.split('@').first ?? '',
         email: user.email ?? '',
       );
+      // Garante que o documento exista no Firestore (usuário pode ter logado sem ter registrado)
+      await _firestore.collection('users').doc(user.uid).set(
+            userModel.toMap(),
+            SetOptions(merge: true),
+          );
+      return userModel;
     } on fb.FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'invalid-email':

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/auth/data/datasources/user_remote_datasource.dart';
 import 'package:love_relationship/features/auth/data/models/user_model.dart';
@@ -40,8 +41,15 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Stream<UserModel> watchById(String uid) {
     return _col.doc(uid).snapshots().map((snap) {
-      // todo criar type para: Usuário não encontrado
-      if (!snap.exists) throw ServerFailure(ServerErrorType.unknown);
+      if (!snap.exists) {
+        if (kDebugMode) {
+          debugPrint('[UserRemoteDataSource] watchById($uid): documento não existe em Firestore');
+        }
+        throw ServerFailure(
+          ServerErrorType.unknown,
+          message: 'Usuário não encontrado em Firestore (doc users/$uid)',
+        );
+      }
       return UserModel.fromMap(snap.data() as Map<String, dynamic>, snap.id);
     });
   }

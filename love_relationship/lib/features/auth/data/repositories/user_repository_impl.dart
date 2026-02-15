@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/auth/data/datasources/user_remote_datasource.dart';
@@ -70,19 +72,16 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Stream<Either<Failure, UserEntity>> watchById(String uid) {
-    return remote
-        .watchById(uid)
-        .map<Either<Failure, UserEntity>>(
-          (model) => Right(model),
-          // TODO CRIAR TIPO DE FALHA ESPECÍFICA SOBRE OBSERVAR USUARIO
-        )
-        .handleError(
-          (e) => Left(
-            ServerFailure(
-              ServerErrorType.unknown,
-              message: 'Falha ao observar usuário',
-            ),
-          ),
-        );
+    return remote.watchById(uid).transform(
+      StreamTransformer<UserModel, Either<Failure, UserEntity>>.fromHandlers(
+        handleData: (model, sink) => sink.add(Right(model)),
+        handleError: (e, st, sink) {
+          sink.add(Left(e is Failure ? e : ServerFailure(
+            ServerErrorType.unknown,
+            message: e.toString(),
+          )));
+        },
+      ),
+    );
   }
 }
