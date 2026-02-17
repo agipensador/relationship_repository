@@ -17,7 +17,7 @@ class MensagemProximidadePage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(24),
           child: Text(
-            'Configure sua mensagem para quando estiverem perto.',
+            'Esta tela vai utilizar localização do casal, e se ambos tiverem localizacão ativa, conseguimos notificar essas mensagens para quando estiverem próximo;\n\nPodendo dar um grau de prioridade para essa mensagem já na hora que cria a mensagem.',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16),
           ),

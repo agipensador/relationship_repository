@@ -21,3 +21,13 @@ final class ChatMessageSent extends ChatEvent {
   @override
   List<Object?> get props => [text];
 }
+
+/// Usuário alterou o nome do parceiro no header.
+final class ChatPartnerNameChanged extends ChatEvent {
+  final String name;
+
+  const ChatPartnerNameChanged(this.name);
+
+  @override
+  List<Object?> get props => [name];
+}

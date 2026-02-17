@@ -30,4 +30,12 @@ class AppColors {
   // Overlay e states
   static const Color overlay = Color(0x33000000); // Preto com 20% opacidade
   static const Color shadow = Color(0x1A000000); // Preto com 10% opacidade
+
+  // Brutalismo (chat e telas com esse padrão)
+  static const Color brutalistPrimary = Color(0xFFE43073); // rosa principal
+  static const Color brutalistAccent = Color(0xFFFFE135); // amarelo CTA
+  static const Color brutalistBackground = Color(0xFFFCECF2); // fundo claro
+  static const Color brutalistSurface = Color(0xFFFFFFFF); // cards/input
+  static const Color brutalistBorder = Color(0xFF000000); // bordas grossas
+  static const Color brutalistText = Color(0xFF000000); // texto bold
 }

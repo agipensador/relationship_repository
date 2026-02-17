@@ -4,6 +4,7 @@ import 'package:love_relationship/features/auth/domain/usecases/get_user_profile
 import 'package:love_relationship/features/chat/domain/entities/chat_message.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_event.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final AuthSession authSession;
@@ -13,6 +14,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       : super(ChatState.initial()) {
     on<ChatLoadRequested>(_onLoadRequested);
     on<ChatMessageSent>(_onMessageSent);
+    on<ChatPartnerNameChanged>(_onPartnerNameChanged);
+  }
+
+  static const _changedChatNamePartnerKey = 'changedChatNamePartner';
+
+  Future<void> _onPartnerNameChanged(
+    ChatPartnerNameChanged event,
+    Emitter<ChatState> emit,
+  ) async {
+    final name = event.name.trim();
+    if (name.isEmpty) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_changedChatNamePartnerKey, name);
+    emit(state.copyWith(partnerName: name));
   }
 
   Future<void> _onLoadRequested(
@@ -20,6 +36,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     emit(state.copyWith(loading: true));
+
+    // TODO ALTERAR PARA O NOME DO PARCEIRO, QUE VIRÁ DO BANCO;
+    // DEPOIS O PRÓPRIO USUÁRIO PODE ESCOLHER UM NOME.
+    final prefs = await SharedPreferences.getInstance();
+    final savedPartnerName =
+        prefs.getString(_changedChatNamePartnerKey) ?? 'Valéria';
 
     try {
       final uid = authSession.requireUid();
@@ -29,6 +51,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         (_) => emit(state.copyWith(
           loading: false,
           userName: 'Usuário',
+          partnerName: savedPartnerName,
           messages: _buildInitialMessages('Usuário'),
         )),
         (user) {
@@ -36,6 +59,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           emit(state.copyWith(
             loading: false,
             userName: name,
+            partnerName: savedPartnerName,
             messages: _buildInitialMessages(name),
           ));
         },
@@ -44,6 +68,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(state.copyWith(
         loading: false,
         userName: 'Usuário',
+        partnerName: savedPartnerName,
         messages: _buildInitialMessages('Usuário'),
       ));
     }

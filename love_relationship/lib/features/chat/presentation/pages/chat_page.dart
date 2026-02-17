@@ -4,6 +4,7 @@ import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_event.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_state.dart';
+import 'package:love_relationship/features/chat/presentation/widgets/chat_app_bar.dart';
 import 'package:love_relationship/features/chat/presentation/widgets/chat_menu_content.dart';
 
 class ChatPage extends StatefulWidget {
@@ -86,15 +87,17 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-      ),
+      backgroundColor: AppColors.brutalistBackground,
+      appBar: const ChatAppBar(),
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           if (state.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.brutalistPrimary,
+                strokeWidth: 4,
+              ),
+            );
           }
 
           return LayoutBuilder(
@@ -160,15 +163,14 @@ class _ChatPageState extends State<ChatPage> {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).scaffoldBackgroundColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, -2),
+                                decoration: const BoxDecoration(
+                                  color: AppColors.brutalistBackground,
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: AppColors.brutalistBorder,
+                                      width: 4,
                                     ),
-                                  ],
+                                  ),
                                 ),
                                 child: SafeArea(
                                   child: Row(
@@ -176,14 +178,44 @@ class _ChatPageState extends State<ChatPage> {
                                       Expanded(
                                         child: TextField(
                                           controller: _messageController,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.brutalistText,
+                                          ),
                                           decoration: InputDecoration(
-                                            hintText: 'digite algo aqui',
+                                            hintText: 'DIGITE AQUI',
+                                            hintStyle: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.brutalistText
+                                                  .withOpacity(0.5),
+                                            ),
+                                            filled: true,
+                                            fillColor: AppColors.brutalistSurface,
                                             border: OutlineInputBorder(
                                               borderRadius: BorderRadius.circular(24),
+                                              borderSide: const BorderSide(
+                                                color: AppColors.brutalistBorder,
+                                                width: 4,
+                                              ),
                                             ),
-                                            contentPadding: const EdgeInsets.symmetric(
-                                              horizontal: 20,
-                                              vertical: 12,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(24),
+                                              borderSide: const BorderSide(
+                                                color: AppColors.brutalistBorder,
+                                                width: 4,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(24),
+                                              borderSide: const BorderSide(
+                                                color: AppColors.brutalistBorder,
+                                                width: 4,
+                                              ),
+                                            ),
+                                            contentPadding: const EdgeInsets
+                                                .symmetric(
+                                              horizontal: 16,
+                                              vertical: 14,
                                             ),
                                           ),
                                           maxLines: 3,
@@ -192,13 +224,41 @@ class _ChatPageState extends State<ChatPage> {
                                           onSubmitted: (_) => _sendMessage(),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
-                                      IconButton(
-                                        onPressed: _sendMessage,
-                                        icon: const Icon(Icons.arrow_upward),
-                                        style: IconButton.styleFrom(
-                                          backgroundColor: AppColors.primary,
-                                          foregroundColor: Colors.white,
+                                      const SizedBox(width: 12),
+                                      Material(
+                                        color: AppColors.brutalistAccent,
+                                        child: InkWell(
+                                          onTap: _sendMessage,
+                                          child: Container(
+                                            width: 52,
+                                            height: 52,
+                                            decoration: const BoxDecoration(
+                                              border: Border(
+                                                top: BorderSide(
+                                                  color: AppColors.brutalistBorder,
+                                                  width: 4,
+                                                ),
+                                                left: BorderSide(
+                                                  color: AppColors.brutalistBorder,
+                                                  width: 4,
+                                                ),
+                                                right: BorderSide(
+                                                  color: AppColors.brutalistBorder,
+                                                  width: 4,
+                                                ),
+                                                bottom: BorderSide(
+                                                  color: AppColors.brutalistBorder,
+                                                  width: 4,
+                                                ),
+                                              ),
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: const Icon(
+                                              Icons.arrow_upward,
+                                              color: AppColors.brutalistText,
+                                              size: 24,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -296,9 +356,10 @@ class _TimestampText extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
-            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w700,
+            color: AppColors.brutalistText,
           ),
         ),
       ),
@@ -317,27 +378,85 @@ class _BubbleContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: isFromCurrentUser
-            ? AppColors.primary
-            : Colors.grey.shade300,
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(16),
-          topRight: const Radius.circular(16),
-          bottomLeft: Radius.circular(isFromCurrentUser ? 16 : 4),
-          bottomRight: Radius.circular(isFromCurrentUser ? 4 : 16),
-        ),
-      ),
-      child: Text(
-        message,
-        style: TextStyle(
-          color: isFromCurrentUser ? Colors.white : Colors.black87,
-          fontSize: 15,
+    return CustomPaint(
+      painter: _BubbleTailPainter(isFromCurrentUser: isFromCurrentUser),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
+        child: IntrinsicWidth(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 280),
+            child: Text(
+              message,
+              style: const TextStyle(
+                color: AppColors.brutalistText,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
+}
+
+/// Desenha o balão com perna (cauda) apontando para o lado de quem fala.
+class _BubbleTailPainter extends CustomPainter {
+  final bool isFromCurrentUser;
+
+  _BubbleTailPainter({required this.isFromCurrentUser});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const radius = 16.0;
+    const tailSize = 10.0;
+    const borderWidth = 4.0;
+
+    final fillColor = isFromCurrentUser
+        ? AppColors.brutalistPrimary
+        : AppColors.brutalistSurface;
+    final borderColor = AppColors.brutalistBorder;
+
+    final bodyHeight = size.height - tailSize;
+    final bodyRect = Rect.fromLTWH(0, 0, size.width, bodyHeight);
+
+    final path = Path();
+    path.addRRect(RRect.fromRectAndRadius(bodyRect, const Radius.circular(radius)));
+
+    final tailPath = Path();
+    if (isFromCurrentUser) {
+      final tx = size.width - 16.0;
+      final ty = bodyHeight - 4.0;
+      tailPath.moveTo(tx, ty);
+      tailPath.lineTo(tx + tailSize, ty + tailSize);
+      tailPath.lineTo(tx + tailSize, ty + 4.0);
+      tailPath.close();
+    } else {
+      final tx = 16.0;
+      final ty = bodyHeight - 4.0;
+      tailPath.moveTo(tx, ty);
+      tailPath.lineTo(tx - tailSize, ty + tailSize);
+      tailPath.lineTo(tx - tailSize, ty + 4.0);
+      tailPath.close();
+    }
+    path.addPath(tailPath, Offset.zero);
+
+    canvas.drawPath(path, Paint()..color = fillColor);
+
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(bodyRect, const Radius.circular(radius)),
+      borderPaint,
+    );
+    canvas.drawPath(tailPath, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BubbleTailPainter oldDelegate) =>
+      oldDelegate.isFromCurrentUser != isFromCurrentUser;
 }
