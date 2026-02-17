@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/config/app_config.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/login/login_event.dart';
@@ -22,21 +23,41 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
   @override
   void initState() {
     super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    if (AppConfig.instance.isDev) {
+      // TODO: remover email/senha
+      _emailController.text = 'gbrrizzardo@gmail.com';
+      _passwordController.text = 'Tenda_123';
+    }
     // Exibe prompt de permissão quando a UI de login já carregou
     WidgetsBinding.instance.addPostFrameCallback((_) {
       sl<NotificationService>().requestPermissions();
+      if (AppConfig.instance.isDev) {
+        if (mounted) {
+          context.read<LoginBloc>().add(LoginEmailChanged(_emailController.text));
+          context.read<LoginBloc>().add(LoginPasswordChanged(_passwordController.text));
+        }
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
 
     return Scaffold(
       body: Center(
@@ -49,14 +70,14 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 32),
 
               AuthTextField(
-                controller: emailController,
+                controller: _emailController,
                 hint: l10n.emailHint,
                 onChanged: (v) => context.read<LoginBloc>().add(LoginEmailChanged(v)),
               ),
 
               const SizedBox(height: 16),
               AuthTextField(
-                controller: passwordController,
+                controller: _passwordController,
                 hint: l10n.passwordHint,
                 obscure: true,
                 onChanged: (v) => context.read<LoginBloc>().add(LoginPasswordChanged(v)),

@@ -50,16 +50,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   List<ChatMessage> _buildInitialMessages(String userName) {
+    final now = DateTime.now();
     return [
       // Esquerda: mensagem da outra pessoa
       ChatMessage(
         text: 'Olá $userName',
         isFromCurrentUser: false,
+        timestamp: now.subtract(const Duration(minutes: 2)),
       ),
       // Direita: mensagem do usuário atual
-      const ChatMessage(
+      ChatMessage(
         text: 'Olá mundo!',
         isFromCurrentUser: true,
+        timestamp: now,
       ),
     ];
   }
@@ -72,6 +75,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final newMessage = ChatMessage(
       text: text,
       isFromCurrentUser: true,
+      timestamp: DateTime.now(),
     );
     emit(state.copyWith(
       messages: [...state.messages, newMessage],

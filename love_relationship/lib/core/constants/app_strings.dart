@@ -7,4 +7,8 @@ abstract class AppStrings {
   static const shellRoute = '/shell';
   static const forgotPasswordRoute = '/forgot-password';
   static const gamesRoute = '/games';
+
+  // Chat menu
+  static const chatMensagemProximidadeRoute = '/chat/mensagem-proximidade';
+  static const chatMensagemFuturoRoute = '/chat/mensagem-futuro';
 }

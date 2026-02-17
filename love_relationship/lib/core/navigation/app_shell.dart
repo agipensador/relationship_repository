@@ -5,6 +5,7 @@ import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/ads_demo/ads_demo_page.dart' hide sl;
 import 'package:love_relationship/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_event.dart';
+import 'package:love_relationship/features/chat/presentation/bloc/chat_menu_bloc.dart';
 import 'package:love_relationship/features/chat/presentation/pages/chat_page.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
@@ -76,8 +77,13 @@ class _AppShellState extends State<AppShell> {
         ),
         // CHAT (substitui Create account na bottom nav)
         PersistentTabConfig(
-          screen: BlocProvider(
-            create: (_) => sl<ChatBloc>()..add(const ChatLoadRequested()),
+          screen: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => sl<ChatBloc>()..add(const ChatLoadRequested()),
+              ),
+              BlocProvider(create: (_) => sl<ChatMenuBloc>()),
+            ],
             child: const ChatPage(),
           ),
           item: ItemConfig(

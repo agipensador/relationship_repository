@@ -17,6 +17,8 @@ import 'package:love_relationship/features/auth/presentation/pages/forgot_passwo
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/login_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
+import 'package:love_relationship/features/chat/presentation/pages/mensagem_futuro_page.dart';
+import 'package:love_relationship/features/chat/presentation/pages/mensagem_proximidade_page.dart';
 import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
 import 'package:love_relationship/features/games/presentation/pages/games_page.dart';
 
@@ -76,6 +78,16 @@ class AppRouter {
             ],
             child: AppShell(),
           ),
+        );
+      // CHAT MENU - Mensagem proximidade
+      case AppStrings.chatMensagemProximidadeRoute:
+        return MaterialPageRoute(
+          builder: (_) => const MensagemProximidadePage(),
+        );
+      // CHAT MENU - Mensagem futuro
+      case AppStrings.chatMensagemFuturoRoute:
+        return MaterialPageRoute(
+          builder: (_) => const MensagemFuturoPage(),
         );
       // GAMES
       case AppStrings.gamesRoute:

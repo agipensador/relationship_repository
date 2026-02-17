@@ -37,6 +37,7 @@ import 'package:love_relationship/features/auth/presentation/bloc/register/regis
 import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:love_relationship/features/chat/presentation/bloc/chat_menu_bloc.dart';
 import 'package:love_relationship/features/games/domain/usecases/get_games_usecase.dart';
 import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
 import 'package:love_relationship/features/notifications/data/repositories/stub_notification_repository.dart';
@@ -191,6 +192,7 @@ Future<void> init() async {
         sl<AuthSession>(),
         sl<GetUserProfileUsecase>(),
       ));
+  sl.registerFactory(() => ChatMenuBloc());
 
   // ADS
   sl.registerLazySingleton<AdIds>(() => AdIdsProd());
