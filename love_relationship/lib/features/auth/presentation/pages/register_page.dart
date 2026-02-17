@@ -5,6 +5,8 @@ import 'package:love_relationship/features/auth/presentation/bloc/register/regis
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:love_relationship/core/error/failure.dart';
+import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
 import 'package:love_relationship/shared/widgets/secondary_button.dart';
@@ -29,10 +31,18 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(title: Text(l10n.createAccount)),
       body: BlocConsumer<RegisterBloc, RegisterState>(
         listener: (context, state) {
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+          if (state.error != null) {
+            final msg = failureToMessage(context, state.error!);
+            final isEmailConfirmation = state.error is AuthFailure &&
+                (state.error as AuthFailure).type == AuthErrorType.emailConfirmationRequired;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(msg),
+                backgroundColor: isEmailConfirmation ? Colors.green : null,
+              ),
+            );
+            // Não navega quando precisa confirmar email
+            if (!isEmailConfirmation) return;
           }
           if (state.registeredUser != null && context.mounted) {
             Navigator.pushReplacementNamed(

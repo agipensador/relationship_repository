@@ -18,10 +18,14 @@ String failureToMessage(BuildContext context, Failure failure){
       case AuthErrorType.unauthenticated:
         return l10n.unauthenticatedUser;
       case AuthErrorType.emailAlreadyInUse:
-        return l10n.createUserError; // crie uma específica se quiser
+        return l10n.createUserError;
+      case AuthErrorType.emailConfirmationRequired:
+        return failure.message ?? l10n.emailConfirmationRequired;
+      case AuthErrorType.invalidConfirmationCode:
+        return failure.message ?? l10n.invalidConfirmationCode;
       case AuthErrorType.unknown:
       default:
-        return l10n.saveError;
+        return failure.message ?? l10n.saveError;
     }
   }
 

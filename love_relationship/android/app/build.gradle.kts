@@ -6,12 +6,9 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")        // <- em Kotlin DSL é este id (não "kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")   
 }
 
 dependencies {
-  implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
-  implementation("com.google.firebase:firebase-analytics")
   coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
 

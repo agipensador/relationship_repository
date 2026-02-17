@@ -24,6 +24,14 @@
   "serverErrorTimeout": "Ups, tiempo de respuesta excedido...",
   "serverErrorUpdateUser": "Error al actualizar usuario",
   "invalidCredentials": "Credenciales no válidas",
-
-  "loginTitle": "Login"
+  "loginTitle": "Login",
+  "invalidConfirmationCode": "Código inválido o expirado. Solicite uno nuevo.",
+  "checkSpam": "Si no encuentra el correo, revise la carpeta de spam.",
+  "passwordResetSuccess": "¡Contraseña cambiada con éxito!",
+  "send": "Enviar",
+  "enterCodeAndNewPassword": "Ingrese el código recibido por correo y establezca su nueva contraseña.",
+  "confirmationCodeHint": "Código de verificación",
+  "newPasswordHint": "Nueva contraseña",
+  "confirmPasswordHint": "Confirmar nueva contraseña",
+  "confirmPasswordReset": "Cambiar contraseña"
 }

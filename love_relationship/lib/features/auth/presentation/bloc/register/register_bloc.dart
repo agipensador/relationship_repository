@@ -11,7 +11,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   Future<void> _onSubmitted(RegisterSubmitted event, Emitter<RegisterState> emit) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null, clearRegisteredUser: true));
+    emit(state.copyWith(isLoading: true, error: null, clearRegisteredUser: true));
 
     final result = await _registerUserUsecase(
       email: event.email,
@@ -20,7 +20,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
 
     result.fold(
-      (failure) => emit(state.copyWith(isLoading: false, errorMessage: failure.message, clearRegisteredUser: true)),
+      (failure) => emit(state.copyWith(isLoading: false, error: failure, clearRegisteredUser: true)),
       (user) => emit(state.copyWith(isLoading: false, registeredUser: user)),
     );
   }

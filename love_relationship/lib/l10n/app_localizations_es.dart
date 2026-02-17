@@ -81,11 +81,41 @@ class AppLocalizationsEs extends AppLocalizations {
   String get invalidCredentials => 'Credenciales no válidas';
 
   @override
-  String get invalidEmail => 'El correo electrónico informado es incorrecto';
+  String get invalidEmail => 'Invalid email';
 
   @override
-  String get wrongPassword => 'La contraseña ingresada es incorrecta';
+  String get wrongPassword => 'Incorrect password';
+
+  @override
+  String get emailConfirmationRequired => 'Check your email to confirm your account';
 
   @override
   String get loginTitle => 'Login';
+
+  @override
+  String get invalidConfirmationCode => 'Código inválido o expirado. Solicite uno nuevo.';
+
+  @override
+  String get checkSpam => 'Si no encuentra el correo, revise la carpeta de spam.';
+
+  @override
+  String get passwordResetSuccess => '¡Contraseña cambiada con éxito!';
+
+  @override
+  String get send => 'Enviar';
+
+  @override
+  String get enterCodeAndNewPassword => 'Ingrese el código recibido por correo y establezca su nueva contraseña.';
+
+  @override
+  String get confirmationCodeHint => 'Código de verificación';
+
+  @override
+  String get newPasswordHint => 'Nueva contraseña';
+
+  @override
+  String get confirmPasswordHint => 'Confirmar nueva contraseña';
+
+  @override
+  String get confirmPasswordReset => 'Cambiar contraseña';
 }

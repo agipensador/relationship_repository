@@ -3,15 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/di/injection_container.dart';
 import 'package:love_relationship/features/ads_demo/ads_demo_page.dart' hide sl;
+import 'package:love_relationship/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:love_relationship/features/chat/presentation/bloc/chat_event.dart';
+import 'package:love_relationship/features/chat/presentation/pages/chat_page.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/home/home_event.dart';
-import 'package:love_relationship/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/pages/edit_user_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
-import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
 import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
 import 'package:love_relationship/features/games/presentation/pages/games_page.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
@@ -73,15 +74,15 @@ class _AppShellState extends State<AppShell> {
             inactiveForegroundColor: AppColors.grayDefault,
           ),
         ),
-        // ADICIONAR PESSOA
+        // CHAT (substitui Create account na bottom nav)
         PersistentTabConfig(
           screen: BlocProvider(
-            create: (_) => sl<RegisterBloc>(),
-            child: const RegisterPage(),
+            create: (_) => sl<ChatBloc>()..add(const ChatLoadRequested()),
+            child: const ChatPage(),
           ),
           item: ItemConfig(
-            icon: const Icon(Icons.person_add_alt_1_outlined),
-            title: l10n.btnRegister,
+            icon: const Icon(Icons.chat_bubble_outline),
+            title: 'Chat',
             activeForegroundColor: AppColors.primary,
             inactiveForegroundColor: AppColors.grayDefault,
           ),

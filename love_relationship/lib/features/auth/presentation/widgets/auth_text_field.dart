@@ -1,28 +1,60 @@
 import 'package:flutter/material.dart';
 
-class AuthTextField extends StatelessWidget {
+class AuthTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hint;
   final bool obscure;
-  void Function(String)? onChanged;
-  AuthTextField({
+  final void Function(String)? onChanged;
+
+  const AuthTextField({
+    super.key,
     required this.controller,
     this.onChanged,
     this.hint = 'Preencha',
     this.obscure = false,
-    super.key,
   });
+
+  @override
+  State<AuthTextField> createState() => _AuthTextFieldState();
+}
+
+class _AuthTextFieldState extends State<AuthTextField> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscure;
+  }
+
+  @override
+  void didUpdateWidget(AuthTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.obscure != widget.obscure) {
+      _obscureText = widget.obscure;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller,
-      obscureText: obscure,
+      controller: widget.controller,
+      obscureText: _obscureText,
       decoration: InputDecoration(
-        hintText: hint,
+        hintText: widget.hint,
         border: const OutlineInputBorder(),
+        suffixIcon: widget.obscure
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() => _obscureText = !_obscureText);
+                },
+              )
+            : null,
       ),
-      onChanged: onChanged,
+      onChanged: widget.onChanged,
     );
   }
 }

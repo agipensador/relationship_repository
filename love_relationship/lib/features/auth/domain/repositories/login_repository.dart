@@ -17,4 +17,10 @@ abstract class LoginRepository {
   Future<void> logout();
 
   Future<Either<Failure, void>> forgotPassword(String email);
+
+  Future<Either<Failure, void>> confirmResetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
 }

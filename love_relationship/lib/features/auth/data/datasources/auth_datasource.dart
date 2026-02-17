@@ -10,4 +10,10 @@ abstract class AuthDatasource {
   Future<void> logout();
 
   Future<void> forgotPassword(String email);
+
+  Future<void> confirmResetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
 }

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dartz/dartz.dart';
 import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/auth/data/datasources/auth_datasource.dart';
@@ -40,21 +39,7 @@ class LoginRepositoryImpl implements LoginRepository {
       );
       return Right(user);
     } on AuthFailure catch (e) {
-      // Se o datasource já mapeia Firebase->AuthFailure tipado, só propaga:
       return Left(e);
-    } on FirebaseAuthException catch (e) {
-      // fallback: mapear aqui se necessário
-      if (e.code == 'email-already-in-use') {
-        return Left(
-          AuthFailure(AuthErrorType.emailAlreadyInUse, message: e.message),
-        );
-      }
-      // Erro de autenticacao, não reconhecido
-      return Left(AuthFailure(AuthErrorType.unknown, message: e.message));
-      // Erro internet
-    } on FirebaseException catch (e) {
-      return Left(ServerFailure(ServerErrorType.network, message: e.message));
-      // Erro Criar usuario (ERRO INDEFINIDO)
     } catch (e) {
       return Left(
         ServerFailure(ServerErrorType.createUserError, message: e.toString()),
@@ -76,6 +61,26 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, void>> forgotPassword(String email) async {
     try {
       await datasource.forgotPassword(email);
+      return const Right(null);
+    } on Failure catch (f) {
+      return Left(f);
+    } catch (e) {
+      return Left(ServerFailure(ServerErrorType.unknown));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> confirmResetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    try {
+      await datasource.confirmResetPassword(
+        email: email,
+        code: code,
+        newPassword: newPassword,
+      );
       return const Right(null);
     } on Failure catch (f) {
       return Left(f);

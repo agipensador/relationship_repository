@@ -20,6 +20,8 @@ enum AuthErrorType {
   wrongPassword,
   unauthenticated,
   emailAlreadyInUse,
+  emailConfirmationRequired,
+  invalidConfirmationCode,
 }
 
 class ServerFailure extends Failure {

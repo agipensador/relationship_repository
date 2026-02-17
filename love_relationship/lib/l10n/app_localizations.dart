@@ -244,20 +244,80 @@ abstract class AppLocalizations {
   /// No description provided for @invalidEmail.
   ///
   /// In en, this message translates to:
-  /// **'The email entered is invalid'**
+  /// **'Invalid email'**
   String get invalidEmail;
 
   /// No description provided for @wrongPassword.
   ///
   /// In en, this message translates to:
-  /// **'The password entered is incorrect'**
+  /// **'Incorrect password'**
   String get wrongPassword;
+
+  /// No description provided for @emailConfirmationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email to confirm your account'**
+  String get emailConfirmationRequired;
 
   /// No description provided for @loginTitle.
   ///
   /// In en, this message translates to:
   /// **'Login'**
   String get loginTitle;
+
+  /// No description provided for @invalidConfirmationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired code. Please request a new one.'**
+  String get invalidConfirmationCode;
+
+  /// No description provided for @checkSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'If you don\'t find the email, check your spam folder.'**
+  String get checkSpam;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully!'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @enterCodeAndNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code received by email and set your new password.'**
+  String get enterCodeAndNewPassword;
+
+  /// No description provided for @confirmationCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get confirmationCodeHint;
+
+  /// No description provided for @newPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPasswordHint;
+
+  /// No description provided for @confirmPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirmPasswordHint;
+
+  /// No description provided for @confirmPasswordReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get confirmPasswordReset;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

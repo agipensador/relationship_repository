@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/services/auth_session.dart';
 import 'package:love_relationship/features/auth/domain/entities/premium_tier.dart';
 import 'package:love_relationship/features/auth/domain/repositories/user_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb;
 
 class PremiumState {
   final bool loading;
@@ -21,12 +21,12 @@ class PremiumState {
 
 class PremiumCubit extends Cubit<PremiumState> {
   final UserRepository userRepository;
-  fb.FirebaseAuth auth;
+  final AuthSession authSession;
 
-  PremiumCubit(this.userRepository, this.auth) : super(const PremiumState());
+  PremiumCubit(this.userRepository, this.authSession) : super(const PremiumState());
 
   Future<void> load() async {
-    final uid = auth.currentUser?.uid;
+    final uid = authSession.currentUidOrNull();
     if (uid == null) return;
     emit(state.copyWith(isLoading: true));
     final result = await userRepository.getById(uid);
@@ -38,7 +38,7 @@ class PremiumCubit extends Cubit<PremiumState> {
   }
 
   Future<void> setTier(PremiumTier tierSet) async {
-    final uid = auth.currentUser?.uid;
+    final uid = authSession.currentUidOrNull();
     if (uid == null) return;
     emit(state.copyWith(isLoading: true));
 

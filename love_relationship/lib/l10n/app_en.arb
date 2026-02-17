@@ -24,6 +24,17 @@
   "serverErrorTimeout": "Oops, response time exceeded...",
   "serverErrorUpdateUser": "Error updating user",
   "invalidCredentials": "Invalid Credentials",
-
-  "loginTitle": "Login"
+  "invalidEmail": "Invalid email",
+  "wrongPassword": "Incorrect password",
+  "emailConfirmationRequired": "Check your email to confirm your account",
+  "loginTitle": "Login",
+  "invalidConfirmationCode": "Invalid or expired code. Please request a new one.",
+  "checkSpam": "If you don't find the email, check your spam folder.",
+  "passwordResetSuccess": "Password changed successfully!",
+  "send": "Send",
+  "enterCodeAndNewPassword": "Enter the code received by email and set your new password.",
+  "confirmationCodeHint": "Verification code",
+  "newPasswordHint": "New password",
+  "confirmPasswordHint": "Confirm new password",
+  "confirmPasswordReset": "Change password"
 }

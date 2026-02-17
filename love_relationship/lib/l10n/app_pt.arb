@@ -24,6 +24,17 @@
   "serverErrorTimeout": "Ops, tempo de resposta excedido...",
   "serverErrorUpdateUser": "Erro ao atualizar usuário",
   "invalidCredentials": "Credenciais inválidas",
-
-  "loginTitle": "Login"
+  "invalidEmail": "Email inválido",
+  "wrongPassword": "Senha incorreta",
+  "emailConfirmationRequired": "Verifique seu e-mail para confirmar a conta",
+  "loginTitle": "Login",
+  "invalidConfirmationCode": "Código inválido ou expirado. Solicite um novo código.",
+  "checkSpam": "Caso não encontre o e-mail, verifique a caixa de spam.",
+  "passwordResetSuccess": "Senha alterada com sucesso!",
+  "send": "Enviar",
+  "enterCodeAndNewPassword": "Informe o código recebido por e-mail e defina sua nova senha.",
+  "confirmationCodeHint": "Código de verificação",
+  "newPasswordHint": "Nova senha",
+  "confirmPasswordHint": "Confirmar nova senha",
+  "confirmPasswordReset": "Alterar senha"
 }

@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/services/auth_session.dart';
 import 'package:love_relationship/features/auth/domain/entities/premium_tier.dart';
 import 'package:love_relationship/features/auth/domain/repositories/user_repository.dart';
 import 'package:love_relationship/core/ads/bloc/premium_event.dart';
@@ -7,9 +7,9 @@ import 'package:love_relationship/core/ads/bloc/premium_state.dart';
 
 class PremiumBloc extends Bloc<PremiumEvent, PremiumState> {
   final UserRepository userRepository;
-  final fb.FirebaseAuth auth;
+  final AuthSession authSession;
 
-  PremiumBloc(this.userRepository, this.auth) : super(const PremiumState()) {
+  PremiumBloc(this.userRepository, this.authSession) : super(const PremiumState()) {
     on<PremiumLoadRequested>(_onLoad);
     on<PremiumSetTierRequested>(_onSetTier);
   }
@@ -18,7 +18,7 @@ class PremiumBloc extends Bloc<PremiumEvent, PremiumState> {
     PremiumLoadRequested event,
     Emitter<PremiumState> emit,
   ) async {
-    final uid = auth.currentUser?.uid;
+    final uid = authSession.currentUidOrNull();
     if (uid == null) return;
     emit(state.copyWith(loading: true));
     final result = await userRepository.getById(uid);
@@ -34,7 +34,7 @@ class PremiumBloc extends Bloc<PremiumEvent, PremiumState> {
     PremiumSetTierRequested event,
     Emitter<PremiumState> emit,
   ) async {
-    final uid = auth.currentUser?.uid;
+    final uid = authSession.currentUidOrNull();
     if (uid == null) return;
     emit(state.copyWith(loading: true));
 
