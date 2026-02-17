@@ -129,8 +129,16 @@ class _ChatPageState extends State<ChatPage> {
                                       _timestampRevealOffset = _timestampRevealOffset
                                           .clamp(0.0, _timestampWidth);
                                     });
+                                    if (_menuScrollController.hasClients) {
+                                      final newOffset = (_menuScrollController.offset - d.delta.dx)
+                                          .clamp(0.0, _menuWidth);
+                                      _menuScrollController.jumpTo(newOffset);
+                                    }
                                   },
-                                  onHorizontalDragEnd: (_) => _onTimestampDragEnd(),
+                                  onHorizontalDragEnd: (_) {
+                                    _onTimestampDragEnd();
+                                    _snapMenu();
+                                  },
                                   child: ListView.builder(
                                     controller: _scrollController,
                                     padding: const EdgeInsets.symmetric(
