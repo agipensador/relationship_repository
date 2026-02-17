@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:love_relationship/features/auth/presentation/widgets/password_requirements_widget.dart';
 import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
 import 'package:love_relationship/shared/widgets/primary_button.dart';
@@ -116,6 +117,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       hint: l10n.newPasswordHint,
                       obscure: true,
                       onChanged: (v) => context.read<ForgotPasswordBloc>().add(ForgotPasswordNewPasswordChanged(v)),
+                    ),
+                    BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
+                      buildWhen: (prev, curr) => prev.newPassword != curr.newPassword,
+                      builder: (context, state) => PasswordRequirementsWidget(password: state.newPassword),
                     ),
                     const SizedBox(height: 16),
                     AuthTextField(

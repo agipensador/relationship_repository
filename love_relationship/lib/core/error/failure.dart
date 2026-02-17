@@ -18,6 +18,7 @@ enum AuthErrorType {
   invalidCredentials,
   invalidEmail,
   wrongPassword,
+  invalidPasswordFormat,
   unauthenticated,
   emailAlreadyInUse,
   emailConfirmationRequired,

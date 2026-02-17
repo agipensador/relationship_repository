@@ -118,4 +118,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get confirmPasswordReset => 'Cambiar contraseña';
+
+  @override
+  String get invalidPasswordFormat => 'La contraseña debe tener: mínimo 8 caracteres, letra mayúscula, letra minúscula, carácter especial y número.';
+
+  @override
+  String get passwordRequirementMinLength => 'Mínimo 8 caracteres';
+
+  @override
+  String get passwordRequirementUppercase => 'Letra mayúscula';
+
+  @override
+  String get passwordRequirementLowercase => 'Letra minúscula';
+
+  @override
+  String get passwordRequirementSpecial => 'Carácter especial';
+
+  @override
+  String get passwordRequirementNumber => 'Número';
 }

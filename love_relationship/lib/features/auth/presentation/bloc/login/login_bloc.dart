@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/error/failure.dart';
+import 'package:love_relationship/core/validators/password_validator.dart';
 import 'package:love_relationship/features/auth/domain/usecases/login_usecase.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/login/login_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/login/login_state.dart';
@@ -43,6 +44,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(
         loading: false,
         error: AuthFailure(AuthErrorType.wrongPassword),
+      ));
+      return;
+    }
+
+    final passwordResult = PasswordValidator.validate(password);
+    if (!passwordResult.isValid) {
+      emit(state.copyWith(
+        loading: false,
+        error: AuthFailure(AuthErrorType.invalidPasswordFormat),
       ));
       return;
     }

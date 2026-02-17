@@ -2,22 +2,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/services/auth_session.dart';
 import 'package:love_relationship/features/auth/domain/usecases/get_user_profile_usecase.dart';
 import 'package:love_relationship/features/chat/domain/entities/chat_message.dart';
+import 'package:love_relationship/features/chat/domain/repositories/chat_partner_name_repository.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_event.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final AuthSession authSession;
   final GetUserProfileUsecase getUserProfileUsecase;
+  final ChatPartnerNameRepository partnerNameRepository;
 
-  ChatBloc(this.authSession, this.getUserProfileUsecase)
+  ChatBloc(
+    this.authSession,
+    this.getUserProfileUsecase,
+    this.partnerNameRepository,
+  )
       : super(ChatState.initial()) {
     on<ChatLoadRequested>(_onLoadRequested);
     on<ChatMessageSent>(_onMessageSent);
     on<ChatPartnerNameChanged>(_onPartnerNameChanged);
   }
-
-  static const _changedChatNamePartnerKey = 'changedChatNamePartner';
 
   Future<void> _onPartnerNameChanged(
     ChatPartnerNameChanged event,
@@ -26,8 +29,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final name = event.name.trim();
     if (name.isEmpty) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_changedChatNamePartnerKey, name);
+    await partnerNameRepository.savePartnerName(name);
     emit(state.copyWith(partnerName: name));
   }
 
@@ -37,11 +39,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     emit(state.copyWith(loading: true));
 
-    // TODO ALTERAR PARA O NOME DO PARCEIRO, QUE VIRÁ DO BANCO;
-    // DEPOIS O PRÓPRIO USUÁRIO PODE ESCOLHER UM NOME.
-    final prefs = await SharedPreferences.getInstance();
-    final savedPartnerName =
-        prefs.getString(_changedChatNamePartnerKey) ?? 'Valéria';
+    final savedPartnerName = await partnerNameRepository.getPartnerName();
 
     try {
       final uid = authSession.requireUid();

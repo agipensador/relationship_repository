@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:love_relationship/core/services/storage_service.dart';
+import 'package:love_relationship/core/theme/app_images_svg.dart';
 
 class AuthImageHeader extends StatefulWidget {
   const AuthImageHeader({super.key});
@@ -37,7 +39,7 @@ class _AuthImageHeaderState extends State<AuthImageHeader> {
         }
 
         if (snapshot.hasError || !snapshot.hasData || isTesting) {
-          return Image.asset('assets/images/a2_logo.jpg', height: 120);
+          return SvgPicture.asset(AppImagesSvg.logoApp, height: 120);
         }
 
         return Image.network(
@@ -45,7 +47,7 @@ class _AuthImageHeaderState extends State<AuthImageHeader> {
           height: 120,
           gaplessPlayback: true,
           errorBuilder: (_, __, ___) =>
-              Image.asset('assets/images/a2_logo.jpg', height: 120),
+              SvgPicture.asset(AppImagesSvg.logoApp, height: 120),
         );
       },
     );

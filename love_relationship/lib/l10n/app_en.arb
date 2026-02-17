@@ -36,5 +36,11 @@
   "confirmationCodeHint": "Verification code",
   "newPasswordHint": "New password",
   "confirmPasswordHint": "Confirm new password",
-  "confirmPasswordReset": "Change password"
+  "confirmPasswordReset": "Change password",
+  "invalidPasswordFormat": "Password must have: minimum 8 characters, uppercase letter, lowercase letter, special character and number.",
+  "passwordRequirementMinLength": "Minimum 8 characters",
+  "passwordRequirementUppercase": "Uppercase letter",
+  "passwordRequirementLowercase": "Lowercase letter",
+  "passwordRequirementSpecial": "Special character",
+  "passwordRequirementNumber": "Number"
 }

@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 180,
                     child: Lottie.asset(
-                      'assets/lottie/heart.json',
+                      'assets/lottie/a2_logo.json',
                       repeat: true,
                       animate: true,
                       fit: BoxFit.contain,

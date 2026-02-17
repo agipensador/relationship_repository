@@ -5,6 +5,7 @@ import 'package:love_relationship/features/auth/presentation/bloc/register/regis
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_state.dart';
 import 'package:love_relationship/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:love_relationship/features/auth/presentation/widgets/password_requirements_widget.dart';
 import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/common/presentation/mappers/failure_message_mapper.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
@@ -68,6 +69,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: passController,
                   hint: l10n.passwordHint,
                   obscure: true,
+                ),
+                ListenableBuilder(
+                  listenable: passController,
+                  builder: (context, _) => PasswordRequirementsWidget(password: passController.text),
                 ),
                 const SizedBox(height: 24),
                 state.isLoading

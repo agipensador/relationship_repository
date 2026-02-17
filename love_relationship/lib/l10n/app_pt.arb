@@ -36,5 +36,11 @@
   "confirmationCodeHint": "Código de verificação",
   "newPasswordHint": "Nova senha",
   "confirmPasswordHint": "Confirmar nova senha",
-  "confirmPasswordReset": "Alterar senha"
+  "confirmPasswordReset": "Alterar senha",
+  "invalidPasswordFormat": "A senha deve ter: mínimo 8 caracteres, letra maiúscula, letra minúscula, caractere especial e número.",
+  "passwordRequirementMinLength": "Mínimo 8 caracteres",
+  "passwordRequirementUppercase": "Letra maiúscula",
+  "passwordRequirementLowercase": "Letra minúscula",
+  "passwordRequirementSpecial": "Caractere especial",
+  "passwordRequirementNumber": "Número"
 }

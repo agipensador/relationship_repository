@@ -36,6 +36,8 @@ import 'package:love_relationship/features/auth/presentation/bloc/login/login_bl
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/home/home_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
+import 'package:love_relationship/features/chat/data/repositories/chat_partner_name_repository_impl.dart';
+import 'package:love_relationship/features/chat/domain/repositories/chat_partner_name_repository.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:love_relationship/features/chat/presentation/bloc/chat_menu_bloc.dart';
 import 'package:love_relationship/features/games/domain/usecases/get_games_usecase.dart';
@@ -111,6 +113,11 @@ Future<void> init() async {
   if (!sl.isRegistered<UpdateUserProfileUsecase>()) {
     sl.registerLazySingleton<UpdateUserProfileUsecase>(
       () => UpdateUserProfileUsecase(sl<UserRepository>()),
+    );
+  }
+  if (!sl.isRegistered<ChatPartnerNameRepository>()) {
+    sl.registerLazySingleton<ChatPartnerNameRepository>(
+      () => ChatPartnerNameRepositoryImpl(),
     );
   }
   if (!sl.isRegistered<LogoutUsecase>()) {
@@ -191,6 +198,7 @@ Future<void> init() async {
   sl.registerFactory(() => ChatBloc(
         sl<AuthSession>(),
         sl<GetUserProfileUsecase>(),
+        sl<ChatPartnerNameRepository>(),
       ));
   sl.registerFactory(() => ChatMenuBloc());
 

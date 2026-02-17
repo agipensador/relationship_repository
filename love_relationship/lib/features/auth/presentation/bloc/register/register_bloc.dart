@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:love_relationship/core/error/failure.dart';
+import 'package:love_relationship/core/validators/password_validator.dart';
 import 'package:love_relationship/features/auth/domain/usecases/register_user_usecase.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/register/register_state.dart';
@@ -11,6 +13,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   Future<void> _onSubmitted(RegisterSubmitted event, Emitter<RegisterState> emit) async {
+    final passwordResult = PasswordValidator.validate(event.password);
+    if (!passwordResult.isValid) {
+      emit(state.copyWith(
+        isLoading: false,
+        error: AuthFailure(AuthErrorType.invalidPasswordFormat),
+        clearRegisteredUser: true,
+      ));
+      return;
+    }
+
     emit(state.copyWith(isLoading: true, error: null, clearRegisteredUser: true));
 
     final result = await _registerUserUsecase(

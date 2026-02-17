@@ -77,7 +77,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
           scrolledUnderElevation: 0,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.zero,
-            side: BorderSide(color: AppColors.brutalistBorder, width: 4),
+            side: BorderSide(color: AppColors.brutalistBorder, width: 2),
           ),
           titleSpacing: 0,
           leadingWidth: 0,
@@ -98,7 +98,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                       color: AppColors.brutalistSurface,
                       border: Border.all(
                         color: AppColors.brutalistBorder,
-                        width: 4,
+                        width: 2,
                       ),
                     ),
                     child: const Icon(

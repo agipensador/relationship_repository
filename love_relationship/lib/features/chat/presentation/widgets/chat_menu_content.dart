@@ -22,7 +22,7 @@ class ChatMenuContent extends StatelessWidget {
             border: Border(
               right: BorderSide(
                 color: AppColors.brutalistBorder,
-                width: 4,
+                width: 2,
               ),
             ),
           ),

@@ -14,7 +14,9 @@ String failureToMessage(BuildContext context, Failure failure){
       case AuthErrorType.invalidEmail:
         return l10n.invalidEmail;
       case AuthErrorType.wrongPassword:
-        return l10n.wrongPassword;
+        return failure.message ?? l10n.wrongPassword;
+      case AuthErrorType.invalidPasswordFormat:
+        return failure.message ?? l10n.invalidPasswordFormat;
       case AuthErrorType.unauthenticated:
         return l10n.unauthenticatedUser;
       case AuthErrorType.emailAlreadyInUse:

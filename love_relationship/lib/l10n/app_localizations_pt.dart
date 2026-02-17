@@ -118,4 +118,22 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get confirmPasswordReset => 'Alterar senha';
+
+  @override
+  String get invalidPasswordFormat => 'A senha deve ter: mínimo 8 caracteres, letra maiúscula, letra minúscula, caractere especial e número.';
+
+  @override
+  String get passwordRequirementMinLength => 'Mínimo 8 caracteres';
+
+  @override
+  String get passwordRequirementUppercase => 'Letra maiúscula';
+
+  @override
+  String get passwordRequirementLowercase => 'Letra minúscula';
+
+  @override
+  String get passwordRequirementSpecial => 'Caractere especial';
+
+  @override
+  String get passwordRequirementNumber => 'Número';
 }

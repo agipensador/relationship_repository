@@ -318,6 +318,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change password'**
   String get confirmPasswordReset;
+
+  /// No description provided for @invalidPasswordFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must have: minimum 8 characters, uppercase letter, lowercase letter, special character and number.'**
+  String get invalidPasswordFormat;
+
+  /// No description provided for @passwordRequirementMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 8 characters'**
+  String get passwordRequirementMinLength;
+
+  /// No description provided for @passwordRequirementUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Uppercase letter'**
+  String get passwordRequirementUppercase;
+
+  /// No description provided for @passwordRequirementLowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowercase letter'**
+  String get passwordRequirementLowercase;
+
+  /// No description provided for @passwordRequirementSpecial.
+  ///
+  /// In en, this message translates to:
+  /// **'Special character'**
+  String get passwordRequirementSpecial;
+
+  /// No description provided for @passwordRequirementNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get passwordRequirementNumber;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

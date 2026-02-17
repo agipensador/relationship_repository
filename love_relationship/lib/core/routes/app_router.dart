@@ -17,6 +17,7 @@ import 'package:love_relationship/features/auth/presentation/pages/forgot_passwo
 import 'package:love_relationship/features/auth/presentation/pages/home_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/login_page.dart';
 import 'package:love_relationship/features/auth/presentation/pages/register_page.dart';
+import 'package:love_relationship/features/splash/presentation/pages/splash_page.dart';
 import 'package:love_relationship/features/chat/presentation/pages/mensagem_futuro_page.dart';
 import 'package:love_relationship/features/chat/presentation/pages/mensagem_proximidade_page.dart';
 import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
@@ -25,8 +26,12 @@ import 'package:love_relationship/features/games/presentation/pages/games_page.d
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      // SPLASH (inicial)
+      case AppStrings.splashRoute:
+        return MaterialPageRoute(
+          builder: (_) => const SplashPage(),
+        );
       // LOGIN
-      case '/':
       case AppStrings.loginRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

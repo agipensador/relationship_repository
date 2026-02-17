@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.5.3
   google_mobile_ads: ^6.0.0
   lottie: ^3.1.2
+  google_fonts: ^6.2.1
   animations: ^2.0.11
 
   # Network (Dio + Retrofit)
@@ -60,6 +61,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.4.8
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.7
   retrofit_generator: ^9.6.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -68,6 +71,24 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+
+# Splash nativo (breve). A animação a2_logo é exibida na SplashPage (Flutter).
+flutter_native_splash:
+  color: "#AA143C"
+  image: "assets/images/png/logo_app.png"
+  android_12:
+    color: "#AA143C"
+    image: "assets/images/png/logo_app.png"
+    icon_background_color: "#AA143C"
+
+# Ícone do app (Android e iOS)
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/png/logo_app.png"
+  remove_alpha_ios: true
+  adaptive_icon_background: "#AA143C"
+  adaptive_icon_foreground: "assets/images/png/logo_app.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -85,7 +106,12 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/svg/
+    - assets/images/png/
+    - assets/icon/
     - assets/lottie/heart.json
+    - assets/lottie/heart_pulse.json
+    - assets/lottie/a2_logo.json
     - amplify_outputs.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

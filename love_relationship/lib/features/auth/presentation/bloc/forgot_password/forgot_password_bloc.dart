@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/error/failure.dart';
+import 'package:love_relationship/core/validators/password_validator.dart';
 import 'package:love_relationship/features/auth/domain/usecases/confirm_reset_password_usecase.dart';
 import 'package:love_relationship/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/forgot_password/forgot_password_event.dart';
@@ -83,9 +84,10 @@ class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> 
       return;
     }
 
-    if (newPassword.length < 8) {
+    final passwordResult = PasswordValidator.validate(newPassword);
+    if (!passwordResult.isValid) {
       emit(state.copyWith(
-        error: AuthFailure(AuthErrorType.wrongPassword, message: 'A senha deve ter no mínimo 8 caracteres'),
+        error: AuthFailure(AuthErrorType.invalidPasswordFormat),
       ));
       return;
     }
