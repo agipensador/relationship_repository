@@ -5,6 +5,7 @@ import 'package:love_relationship/core/theme/app_colors.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_status.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_event.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/edit_user/edit_user_state.dart';
@@ -85,21 +86,18 @@ class _EditUserPageState extends State<EditUserPage> {
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state.error != null) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.error!)));
-                    } else if (state.loggedOut) {
-                      Navigator.of(
-                        context,
-                        rootNavigator: true,
-                      ).pushNamedAndRemoveUntil(
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(state.error!)));
+                    } else if (state.status == AuthStatus.unauthenticated) {
+                      Navigator.of(context, rootNavigator: true)
+                          .pushNamedAndRemoveUntil(
                         AppStrings.loginRoute,
                         (route) => false,
                       );
                     }
                   },
                   builder: (context, state) {
-                    return state.isLoggingOut
+                    return state.status == AuthStatus.loading
                         ? const CircularProgressIndicator()
                         : PrimaryButton(
                             text: 'Logout',

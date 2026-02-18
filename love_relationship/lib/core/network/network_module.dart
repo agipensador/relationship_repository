@@ -4,14 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:love_relationship/core/config/app_config.dart';
+import 'package:love_relationship/core/network/auth_interceptor.dart';
 import 'package:love_relationship/core/network/rest_api.dart';
+import 'package:love_relationship/features/auth/domain/repositories/auth_repository.dart';
 
 /// Módulo de rede responsável por configurar Dio e RestClient (Retrofit).
 /// A baseUrl é obtida do AppConfig conforme o flavor (dev, qa, prod).
-/// TODO - CONECTAR COM AWS: configurar interceptors de autenticação quando integrar.
 class NetworkModule {
   static Dio? _dioInstance;
   static RestClient? _restClientInstance;
+  static AuthRepository? _authRepository;
+
+  /// Configura o AuthRepository para o interceptor. Chamar antes de getRestClientInstance.
+  static void configureAuth(AuthRepository authRepository) {
+    _authRepository = authRepository;
+  }
 
   static RestClient getRestClientInstance() {
     return _restClientInstance ?? _provideRestClient();
@@ -65,15 +72,18 @@ class NetworkModule {
           responseHeader: false,
           logPrint: (obj) => log(obj.toString()),
         ),
-      )
-      ..interceptors.add(
+      );
+
+    if (_authRepository != null) {
+      dioInstance.interceptors.add(AuthInterceptor(_authRepository!));
+    }
+
+    dioInstance.interceptors.add(
         InterceptorsWrapper(
           onRequest: (
             RequestOptions options,
             RequestInterceptorHandler handler,
           ) async {
-            // TODO - CONECTAR COM AWS: adicionar token de autenticação no header
-            // Exemplo: options.headers['Authorization'] = 'Bearer $token';
             return handler.next(options);
           },
           onResponse: (
@@ -89,7 +99,6 @@ class NetworkModule {
             DioException error,
             ErrorInterceptorHandler handler,
           ) async {
-            // TODO - CONECTAR COM AWS: tratar 401/403 (refresh token, logout, etc.)
             return handler.next(error);
           },
         ),
@@ -102,5 +111,6 @@ class NetworkModule {
   static void reset() {
     _dioInstance = null;
     _restClientInstance = null;
+    _authRepository = null;
   }
 }

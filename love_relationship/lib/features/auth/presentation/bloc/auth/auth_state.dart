@@ -1,18 +1,25 @@
+import 'package:love_relationship/features/auth/domain/entities/user_entity.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_status.dart';
+
 class AuthState {
-  final bool isLoggingOut;
-  final bool loggedOut;
+  final AuthStatus status;
+  final UserEntity? user;
   final String? error;
 
   const AuthState({
-    this.isLoggingOut = false,
-    this.loggedOut = false,
+    this.status = AuthStatus.unknown,
+    this.user,
     this.error,
   });
 
-  AuthState copyWith({bool? isLoggingOut, bool? loggedOut, String? error}) {
+  AuthState copyWith({
+    AuthStatus? status,
+    UserEntity? user,
+    String? error,
+  }) {
     return AuthState(
-      isLoggingOut: isLoggingOut ?? this.isLoggingOut,
-      loggedOut: loggedOut ?? this.loggedOut,
+      status: status ?? this.status,
+      user: user ?? this.user,
       error: error,
     );
   }

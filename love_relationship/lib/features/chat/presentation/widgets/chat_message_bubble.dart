@@ -8,6 +8,8 @@ class ChatMessageBubble extends StatelessWidget {
   final bool isFromCurrentUser;
   final DateTime timestamp;
   final double timestampRevealOffset;
+  /// Se true, exibe o triângulo no canto. Apenas a última mensagem de cada grupo consecutivo deve ter.
+  final bool showTail;
 
   const ChatMessageBubble({
     super.key,
@@ -15,6 +17,7 @@ class ChatMessageBubble extends StatelessWidget {
     required this.isFromCurrentUser,
     required this.timestamp,
     this.timestampRevealOffset = 0,
+    this.showTail = true,
   });
 
   @override
@@ -31,6 +34,7 @@ class ChatMessageBubble extends StatelessWidget {
           child: _BubbleContent(
             message: message,
             isFromCurrentUser: isFromCurrentUser,
+            showTail: showTail,
           ),
         );
 
@@ -83,19 +87,24 @@ class _TimestampText extends StatelessWidget {
 class _BubbleContent extends StatelessWidget {
   final String message;
   final bool isFromCurrentUser;
+  final bool showTail;
 
   const _BubbleContent({
     required this.message,
     required this.isFromCurrentUser,
+    required this.showTail,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _BubbleTailPainter(isFromCurrentUser: isFromCurrentUser),
+      painter: _BubbleTailPainter(
+        isFromCurrentUser: isFromCurrentUser,
+        showTail: showTail,
+      ),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
+        margin: const EdgeInsets.only(bottom: 2),
+        padding: EdgeInsets.fromLTRB(16, 12, 16, showTail ? 18 : 12),
         child: IntrinsicWidth(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: ChatUiConstants.maxBubbleWidth),
@@ -115,10 +124,15 @@ class _BubbleContent extends StatelessWidget {
 }
 
 /// Desenha o balão com perna (cauda) apontando para o lado de quem fala.
+/// showTail: apenas a última mensagem de cada grupo consecutivo deve ter o triângulo.
 class _BubbleTailPainter extends CustomPainter {
   final bool isFromCurrentUser;
+  final bool showTail;
 
-  _BubbleTailPainter({required this.isFromCurrentUser});
+  _BubbleTailPainter({
+    required this.isFromCurrentUser,
+    required this.showTail,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -132,26 +146,8 @@ class _BubbleTailPainter extends CustomPainter {
         : AppColors.brutalistSurface;
     final borderColor = AppColors.brutalistBorder;
 
-    final bodyHeight = size.height - tailHeight;
+    final bodyHeight = showTail ? size.height - tailHeight : size.height;
     final bodyRect = Rect.fromLTWH(0, 0, size.width, bodyHeight);
-
-    // Triângulo encaixado no canto inferior (esquerdo ou direito)
-    final tailPath = Path();
-    if (isFromCurrentUser) {
-      // Canto inferior direito: base na borda, ponta para baixo-direita
-      final cornerX = size.width - radius;
-      tailPath.moveTo(cornerX - tailWidth, bodyHeight);
-      tailPath.lineTo(cornerX, bodyHeight);
-      tailPath.lineTo(cornerX, bodyHeight + tailHeight);
-      tailPath.close();
-    } else {
-      // Canto inferior esquerdo: base na borda, ponta para baixo-esquerda
-      final cornerX = radius;
-      tailPath.moveTo(cornerX, bodyHeight);
-      tailPath.lineTo(cornerX + tailWidth, bodyHeight);
-      tailPath.lineTo(cornerX, bodyHeight + tailHeight);
-      tailPath.close();
-    }
 
     // Balão: preenchimento branco ou vermelho
     canvas.drawPath(
@@ -159,13 +155,30 @@ class _BubbleTailPainter extends CustomPainter {
       Paint()..color = fillColor,
     );
 
-    // Triângulo: preenchimento e borda pretos
-    canvas.drawPath(tailPath, Paint()..color = borderColor);
     final borderPaint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = borderWidth;
-    canvas.drawPath(tailPath, borderPaint);
+
+    if (showTail) {
+      // Triângulo encaixado no canto inferior (esquerdo ou direito)
+      final tailPath = Path();
+      if (isFromCurrentUser) {
+        final cornerX = size.width - radius;
+        tailPath.moveTo(cornerX - tailWidth, bodyHeight);
+        tailPath.lineTo(cornerX, bodyHeight);
+        tailPath.lineTo(cornerX, bodyHeight + tailHeight);
+        tailPath.close();
+      } else {
+        final cornerX = radius;
+        tailPath.moveTo(cornerX, bodyHeight);
+        tailPath.lineTo(cornerX + tailWidth, bodyHeight);
+        tailPath.lineTo(cornerX, bodyHeight + tailHeight);
+        tailPath.close();
+      }
+      canvas.drawPath(tailPath, Paint()..color = borderColor);
+      canvas.drawPath(tailPath, borderPaint);
+    }
 
     // Borda do balão
     canvas.drawRRect(
@@ -176,5 +189,6 @@ class _BubbleTailPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _BubbleTailPainter oldDelegate) =>
-      oldDelegate.isFromCurrentUser != isFromCurrentUser;
+      oldDelegate.isFromCurrentUser != isFromCurrentUser ||
+      oldDelegate.showTail != showTail;
 }

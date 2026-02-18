@@ -16,6 +16,9 @@ import 'package:love_relationship/core/services/amplify_auth_session.dart';
 // AUTH (login/register)
 import 'package:love_relationship/features/auth/data/datasources/auth_datasource.dart';
 import 'package:love_relationship/features/auth/data/datasources/amplify_auth_datasource.dart';
+import 'package:love_relationship/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:love_relationship/features/auth/domain/repositories/auth_repository.dart';
+import 'package:love_relationship/features/auth/domain/usecases/check_auth_session_usecase.dart';
 import 'package:love_relationship/features/auth/data/datasources/cognito_user_remote_datasource.dart';
 import 'package:love_relationship/features/auth/data/datasources/user_remote_datasource.dart';
 import 'package:love_relationship/features/auth/data/repositories/login_repository_impl.dart';
@@ -50,7 +53,20 @@ import 'package:love_relationship/features/notifications/domain/usecases/sync_fc
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // ========= DATASOURCES =========
+  if (!sl.isRegistered<AuthDatasource>()) {
+    sl.registerLazySingleton<AuthDatasource>(() => AmplifyAuthDatasource());
+  }
+
+  // ========= AUTH REPOSITORY =========
+  if (!sl.isRegistered<AuthRepository>()) {
+    sl.registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(sl<AuthDatasource>()),
+    );
+  }
+
   // ========= NETWORK (Dio + Retrofit) =========
+  NetworkModule.configureAuth(sl<AuthRepository>());
   if (!sl.isRegistered<RestClient>()) {
     sl.registerLazySingleton<RestClient>(
       () => NetworkModule.getRestClientInstance(),
@@ -62,10 +78,6 @@ Future<void> init() async {
     sl.registerLazySingleton<StorageService>(() => StubStorageService());
   }
 
-  // ========= DATASOURCES =========
-  if (!sl.isRegistered<AuthDatasource>()) {
-    sl.registerLazySingleton<AuthDatasource>(() => AmplifyAuthDatasource());
-  }
   if (!sl.isRegistered<UserRemoteDataSource>()) {
     sl.registerLazySingleton<UserRemoteDataSource>(
       () => CognitoUserRemoteDataSource(),
@@ -120,8 +132,13 @@ Future<void> init() async {
       () => ChatPartnerNameRepositoryImpl(),
     );
   }
+  if (!sl.isRegistered<CheckAuthSessionUseCase>()) {
+    sl.registerLazySingleton<CheckAuthSessionUseCase>(
+      () => CheckAuthSessionUseCase(sl<AuthRepository>()),
+    );
+  }
   if (!sl.isRegistered<LogoutUsecase>()) {
-    sl.registerLazySingleton(() => LogoutUsecase(sl<LoginRepository>()));
+    sl.registerLazySingleton(() => LogoutUsecase(sl<AuthRepository>()));
   }
 
   // ========= BLOCS =========
@@ -149,7 +166,10 @@ Future<void> init() async {
     );
   }
   if (!sl.isRegistered<AuthBloc>()) {
-    sl.registerFactory(() => AuthBloc(sl<LogoutUsecase>()));
+    sl.registerFactory(() => AuthBloc(
+          sl<CheckAuthSessionUseCase>(),
+          sl<LogoutUsecase>(),
+        ));
   }
 
   if (!sl.isRegistered<ForgotPasswordUseCase>()) {

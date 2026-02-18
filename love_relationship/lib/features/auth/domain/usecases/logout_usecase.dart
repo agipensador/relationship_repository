@@ -1,10 +1,10 @@
-import 'package:love_relationship/features/auth/domain/repositories/login_repository.dart';
+import 'package:love_relationship/features/auth/domain/repositories/auth_repository.dart';
 
 class LogoutUsecase {
-  final LoginRepository loginRepository;
-  LogoutUsecase(this.loginRepository);
+  final AuthRepository authRepository;
+  LogoutUsecase(this.authRepository);
 
   Future<void> call() async {
-    return await loginRepository.logout();
+    return authRepository.logout();
   }
 }

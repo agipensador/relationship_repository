@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/config/app_config.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_event.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_state.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_status.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:love_relationship/features/auth/presentation/bloc/login/login_event.dart';
@@ -95,27 +99,28 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               //BLoC
-              BlocConsumer<LoginBloc, LoginState>(
+              BlocListener<AuthBloc, AuthState>(
+                listenWhen: (prev, curr) =>
+                    curr.status == AuthStatus.authenticated,
                 listener: (context, state) {
-                  if (state.error != null) {
-                    final msg = failureToMessage(context, state.error!);
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(msg)));
-                  } else if (state.user != null) {
-                    // Navigator.pushReplacementNamed(
-                    //   context,
-                    //   AppStrings.shellRoute,
-                    // );
-                    Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pushNamedAndRemoveUntil(
-                      AppStrings.shellRoute,
-                      (route) => false,
-                    );
-                  }
+                  Navigator.of(context, rootNavigator: true)
+                      .pushNamedAndRemoveUntil(
+                    AppStrings.shellRoute,
+                    (route) => false,
+                  );
                 },
+                child: BlocConsumer<LoginBloc, LoginState>(
+                  listener: (context, state) {
+                    if (state.error != null) {
+                      final msg = failureToMessage(context, state.error!);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(msg)));
+                    } else if (state.user != null) {
+                      context
+                          .read<AuthBloc>()
+                          .add(const AuthAppStarted());
+                    }
+                  },
                 builder: (context, state) {
                   return state.loading
                       ? CircularProgressIndicator()
@@ -139,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         );
                 },
+                ),
               ),
             ],
           ),

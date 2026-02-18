@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:love_relationship/core/error/failure.dart';
 import 'package:love_relationship/features/auth/data/datasources/auth_datasource.dart';
@@ -121,6 +122,39 @@ class AmplifyAuthDatasource implements AuthDatasource {
   @override
   Future<void> logout() async {
     await Amplify.Auth.signOut();
+  }
+
+  @override
+  Future<UserEntity?> getCurrentUser() async {
+    try {
+      final user = await Amplify.Auth.getCurrentUser();
+      final attrs = await Amplify.Auth.fetchUserAttributes();
+      final emailAttr = attrs
+          .where((a) => a.userAttributeKey == AuthUserAttributeKey.email)
+          .firstOrNull;
+      final nameAttr = attrs
+          .where((a) => a.userAttributeKey == AuthUserAttributeKey.name)
+          .firstOrNull;
+      return UserModel(
+        id: user.userId,
+        name: nameAttr?.value ?? '',
+        email: emailAttr?.value ?? '',
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<String?> getAccessToken() async {
+    try {
+      final cognitoPlugin = Amplify.Auth.getPlugin(AmplifyAuthCognito.pluginKey);
+      final session = await cognitoPlugin.fetchAuthSession();
+      final tokens = session.userPoolTokensResult.value;
+      return tokens.accessToken.raw;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override

@@ -3,12 +3,14 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:love_relationship/core/config/app_config.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/core/theme/app_theme.dart';
 import 'package:love_relationship/l10n/app_localizations.dart';
+import 'package:love_relationship/features/auth/presentation/bloc/auth/auth_bloc.dart';
 
 import 'core/routes/app_router.dart';
 import 'di/injection_container.dart';
@@ -54,16 +56,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final config = AppConfig.instance;
 
-    return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      title: config.appName,
-      debugShowCheckedModeBanner: config.showDebugBanner,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      onGenerateRoute: AppRouter.generateRoute,
-      initialRoute: AppStrings.splashRoute,
+    return BlocProvider<AuthBloc>(
+      create: (_) => sl<AuthBloc>(),
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        title: config.appName,
+        debugShowCheckedModeBanner: config.showDebugBanner,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        onGenerateRoute: AppRouter.generateRoute,
+        initialRoute: AppStrings.splashRoute,
+      ),
     );
   }
 }

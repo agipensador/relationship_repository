@@ -170,11 +170,14 @@ class _ChatPageState extends State<ChatPage> {
                                         itemCount: state.messages.length,
                                         itemBuilder: (context, index) {
                                           final msg = state.messages[index];
+                                          final isLastInGroup = index == state.messages.length - 1 ||
+                                              state.messages[index + 1].isFromCurrentUser != msg.isFromCurrentUser;
                                           return ChatMessageBubble(
                                             message: msg.text,
                                             isFromCurrentUser: msg.isFromCurrentUser,
                                             timestamp: msg.timestamp,
                                             timestampRevealOffset: _timestampRevealOffset,
+                                            showTail: isLastInGroup,
                                           );
                                         },
                                       ),
