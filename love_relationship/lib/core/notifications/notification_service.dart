@@ -1,17 +1,19 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/services.dart';
 
-/// Serviço de notificações (local + push futuro com SNS/Pinpoint).
-/// FCM removido; apenas notificações locais por enquanto.
+/// Serviço de notificações (local + FCM push).
 class NotificationService {
+  NotificationService(this._flutterLocalNotificationsPlugin);
+
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   static const _channelId = 'app_default_channel';
   static const _channelName = 'Default';
   static const _channelDesc = 'General notifications';
-
-  NotificationService(this._flutterLocalNotificationsPlugin);
 
   Future<void> initCore() async {
     const init = InitializationSettings(
@@ -33,6 +35,58 @@ class NotificationService {
         ?.createNotificationChannel(channel);
   }
 
+  /// Inicializa FCM (chamar apenas quando Firebase estiver configurado).
+  Future<void> initFcm() async {
+    await requestPermissions();
+
+    if (Platform.isIOS) {
+      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+
+    FirebaseMessaging.onMessage.listen(_onForegroundMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
+
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _onMessageOpenedApp(initialMessage);
+    }
+
+    // Solicita token e loga para debug (use em "Enviar para dispositivo único" no Firebase Console)
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      if (kDebugMode && token != null) {
+        debugPrint('[FCM] Token (copie para testar no Firebase Console):');
+        debugPrint(token);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[FCM] Erro ao obter token: $e');
+      }
+    }
+  }
+
+  void _onForegroundMessage(RemoteMessage message) {
+    if (kDebugMode) {
+      debugPrint('[FCM] Mensagem em foreground: ${message.notification?.title}');
+    }
+    final notification = message.notification;
+    showLocal(
+      title: notification?.title ?? 'Nova notificação',
+      body: notification?.body ?? '',
+    );
+  }
+
+  void _onMessageOpenedApp(RemoteMessage message) {
+    if (kDebugMode) {
+      debugPrint('[FCM] Notificação tocada: ${message.messageId}');
+    }
+    // TODO: navegar para tela específica baseado em message.data
+  }
+
   Future<void> requestPermissions() async {
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -43,6 +97,17 @@ class NotificationService {
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(alert: true, badge: true, sound: true);
+
+    if (Platform.isIOS) {
+      final settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      if (kDebugMode) {
+        debugPrint('[FCM] Permissão iOS: ${settings.authorizationStatus}');
+      }
+    }
   }
 
   Future<bool> showLocal({String? title, String? body}) async {
@@ -74,12 +139,12 @@ class NotificationService {
       return true;
     } on PlatformException catch (e) {
       if (kDebugMode) {
-        print('FLN.show PlatformException: code=${e.code} msg=${e.message}');
+        debugPrint('FLN.show PlatformException: code=${e.code} msg=${e.message}');
       }
       return false;
     } catch (e) {
       if (kDebugMode) {
-        print('FLN.show error: $e');
+        debugPrint('FLN.show error: $e');
       }
       return false;
     }

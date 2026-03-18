@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "887107830985",
+    "project_id": "love-relationship-7c9ad",
+    "storage_bucket": "love-relationship-7c9ad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887107830985:android:55e5fbdcbe42b1496ab918",
+        "android_client_info": {
+          "package_name": "com.always.about.love.love_relationship"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM6S8g5VelI1irxuKAFSm_6Vi5jsBwR2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

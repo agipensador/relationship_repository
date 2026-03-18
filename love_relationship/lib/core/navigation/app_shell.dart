@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:love_relationship/core/theme/app_colors.dart';
@@ -26,11 +28,37 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
+/// Nomes das tabs para Firebase Analytics (ordem deve corresponder aos índices).
+const _tabScreenNames = [
+  'tab_home',
+  'tab_games',
+  'tab_ads',
+  'tab_chat',
+  'tab_edit_user',
+];
+
 class _AppShellState extends State<AppShell> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _logTabScreenView(0);
+    });
+  }
+
+  @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
+  }
+
+  void _logTabScreenView(int index) {
+    if (Firebase.apps.isEmpty) return; // Firebase não inicializado (ex: API key dummy)
+    if (index >= 0 && index < _tabScreenNames.length) {
+      FirebaseAnalytics.instance.logScreenView(
+        screenName: _tabScreenNames[index],
+        screenClass: _tabScreenNames[index],
+      );
+    }
   }
 
   @override
@@ -38,6 +66,7 @@ class _AppShellState extends State<AppShell> {
     final l10n = AppLocalizations.of(context)!;
 
     return PersistentTabView(
+      onTabChanged: _logTabScreenView,
       tabs: [
         // HOME
         PersistentTabConfig(

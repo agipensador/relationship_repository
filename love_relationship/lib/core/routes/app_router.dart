@@ -29,11 +29,13 @@ class AppRouter {
       // SPLASH (inicial)
       case AppStrings.splashRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => const SplashPage(),
         );
       // LOGIN
       case AppStrings.loginRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => sl<LoginBloc>(),
             child: const LoginPage(),
@@ -42,6 +44,7 @@ class AppRouter {
       // REGISTRAR
       case AppStrings.registerRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => sl<RegisterBloc>(),
             child: const RegisterPage(),
@@ -50,6 +53,7 @@ class AppRouter {
       // HOME
       case AppStrings.homeRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => sl<HomeBloc>()..add(const HomeLoadCurrentUser()),
             child: const HomePage(),
@@ -58,6 +62,7 @@ class AppRouter {
       // EDITAR USUARIO
       case AppStrings.editUserRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => sl<EditUserBloc>()..add(const EditUserLoad())),
@@ -69,6 +74,7 @@ class AppRouter {
       // ESQUECI SENHA
       case AppStrings.forgotPasswordRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => sl<ForgotPasswordBloc>(),
             child: const ForgotPasswordPage(),
@@ -77,6 +83,7 @@ class AppRouter {
       // BOTTOM NAV
       case AppStrings.shellRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider<PremiumBloc>.value(value: sl<PremiumBloc>()),
@@ -87,16 +94,19 @@ class AppRouter {
       // CHAT MENU - Mensagem proximidade
       case AppStrings.chatMensagemProximidadeRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => const MensagemProximidadePage(),
         );
       // CHAT MENU - Mensagem futuro
       case AppStrings.chatMensagemFuturoRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => const MensagemFuturoPage(),
         );
       // GAMES
       case AppStrings.gamesRoute:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => BlocProvider(
             create: (_) => sl<GamesBloc>(),
             child: const GamesPage(),
@@ -105,6 +115,7 @@ class AppRouter {
       // SE ROTA NÃO ENCONTRADA
       default:
         return MaterialPageRoute(
+          settings: settings,
           builder: (_) => const Scaffold(
             body: Center(
               child: Column(

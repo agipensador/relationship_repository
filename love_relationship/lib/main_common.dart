@@ -1,11 +1,17 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:love_relationship/core/config/app_config.dart';
+import 'package:love_relationship/firebase_options.dart';
 import 'package:love_relationship/core/constants/app_strings.dart';
 import 'package:love_relationship/core/notifications/notification_service.dart';
 import 'package:love_relationship/core/theme/app_theme.dart';
@@ -25,6 +31,40 @@ Future<void> _configureAmplify() async {
 Future<void> mainCommon() async {
   try {
     if (kDebugMode) {
+      debugPrint('[mainCommon] Inicializando Firebase...');
+    }
+    final options = DefaultFirebaseOptions.currentPlatform;
+    // API key dummy causa crash no iOS; pule init se não configurado
+    final skipFirebase = options.apiKey.contains('Dummy') ||
+        options.apiKey.contains('ReplaceWith');
+    if (skipFirebase) {
+      if (kDebugMode) {
+        debugPrint(
+            '[mainCommon] Firebase: API key não configurada, pulando. Rode: flutterfire configure');
+      }
+    } else {
+      await Firebase.initializeApp(options: options);
+      FlutterError.onError = (error) {
+        FlutterError.presentError(error);
+        FirebaseCrashlytics.instance.recordFlutterFatalError(error);
+      };
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+      if (kDebugMode) {
+        debugPrint('[mainCommon] Firebase inicializado');
+      }
+    }
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      debugPrint('[mainCommon] Erro ao inicializar Firebase: $e');
+      debugPrint('[mainCommon] Stack trace: $stackTrace');
+    }
+  }
+
+  try {
+    if (kDebugMode) {
       debugPrint('[mainCommon] Inicializando Amplify...');
       debugPrint('[mainCommon] Flavor atual: ${AppConfig.instance.flavor.name}');
     }
@@ -42,6 +82,9 @@ Future<void> mainCommon() async {
   await init();
 
   await sl<NotificationService>().initCore();
+  if (Firebase.apps.isNotEmpty) {
+    await sl<NotificationService>().initFcm();
+  }
   if (kDebugMode) {
     debugPrint('GetIt registrations: ${sl.allReadySync()}');
   }
@@ -66,6 +109,11 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: ThemeMode.system,
+        navigatorObservers: Firebase.apps.isEmpty
+            ? []
+            : [
+                FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+              ],
         onGenerateRoute: AppRouter.generateRoute,
         initialRoute: AppStrings.splashRoute,
       ),

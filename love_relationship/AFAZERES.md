@@ -11,6 +11,7 @@
 - [ ] Jogos devem ser funcionalidades de "Em breve"
 - [ ] Implementar chat conforme TODO_CHAT.md (backend AWS, multimodal, áudio, chamadas, IA)
 - [ ] As fotos/documentos/links adicionadas no chat devem estar em CHIPS, como o WhatsApp (quando clica no usuário ou em ícone três pontinhos, deve carregar mais opções)
+- [ ] Adicionar métricas corretamente utilizando o Analytics e Crashlytics do Firebase
 
 ---
 
@@ -23,3 +24,20 @@
   - Acompanhar quando o `google_mobile_ads` passar a suportar Swift Package Manager ([issue #1239](https://github.com/googleads/googleads-mobile-flutter/issues/1239)).  
   - Remover `enable-swift-package-manager: false` assim que o conflito for resolvido (versões futuras do Flutter podem não permitir desabilitar SPM).  
   - Avaliar atualizar `google_mobile_ads` ou `webview_flutter_wkwebview` quando houver versões compatíveis com ambos os gerenciadores.
+
+---
+
+## iOS: Configurar notificação push (FCM)
+
+- [ ] **API key no firebase_options.dart**  
+  Garantir que o iOS use API key real (não dummy). Rodar `flutterfire configure` ou atualizar manualmente.
+
+- [ ] **APNs no Firebase Console**  
+  - Firebase Console → Project Settings → Cloud Messaging  
+  - Em "Apple app configuration", adicionar APNs Authentication Key (.p8) ou APNs Certificates (.p12)
+
+- [ ] **Capability no Xcode**  
+  - Abrir `ios/Runner.xcworkspace` no Xcode  
+  - Target Runner → Signing & Capabilities → + Capability → Push Notifications
+
+- [ ] **Testar em dispositivo físico** (push não funciona no simulador iOS)

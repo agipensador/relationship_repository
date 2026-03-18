@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:love_relationship/core/ads/ad_ids.dart';
@@ -45,7 +46,7 @@ import 'package:love_relationship/features/chat/presentation/bloc/chat_bloc.dart
 import 'package:love_relationship/features/chat/presentation/bloc/chat_menu_bloc.dart';
 import 'package:love_relationship/features/games/domain/usecases/get_games_usecase.dart';
 import 'package:love_relationship/features/games/presentation/bloc/games_bloc.dart';
-import 'package:love_relationship/features/notifications/data/repositories/stub_notification_repository.dart';
+import 'package:love_relationship/features/notifications/data/repositories/fcm_notification_repository_impl.dart';
 import 'package:love_relationship/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:love_relationship/features/notifications/domain/usecases/subscribe_topic_usecase.dart';
 import 'package:love_relationship/features/notifications/domain/usecases/sync_fcm_token_usecase.dart';
@@ -194,7 +195,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => NotificationService(sl()));
 
   sl.registerLazySingleton<NotificationRepository>(
-    () => StubNotificationRepository(),
+    () => FcmNotificationRepositoryImpl(),
   );
 
   sl.registerLazySingleton(
@@ -222,10 +223,20 @@ Future<void> init() async {
       ));
   sl.registerFactory(() => ChatMenuBloc());
 
-  // ADS
+  // ADS - init em background; no simulador iOS pode crashar se chamado no startup,
+  // então adiamos para depois do app conectar ao VM Service
   sl.registerLazySingleton<AdIds>(() => AdIdsProd());
   sl.registerLazySingleton<AdsRepository>(() => AdsService());
-  await sl<AdsRepository>().init();
+  Future.microtask(() async {
+    try {
+      await sl<AdsRepository>().init();
+    } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('[DI] Ads init falhou (comum no simulador iOS): $e');
+        debugPrint('[DI] Stack: $st');
+      }
+    }
+  });
 
   // PREMIUM
   sl.registerSingleton<PremiumBloc>(
