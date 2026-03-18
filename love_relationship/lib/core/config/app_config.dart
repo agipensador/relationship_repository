@@ -35,11 +35,11 @@ enum AppFlavor {
   String get displayName {
     switch (this) {
       case AppFlavor.dev:
-        return 'Love Relationship (DEV)';
+        return '"A2" (DEV)';
       case AppFlavor.qa:
-        return 'Love Relationship (QA)';
+        return '"A2" (QA)';
       case AppFlavor.prod:
-        return 'Love Relationship';
+        return '"A2"';
     }
   }
 }

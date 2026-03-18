@@ -95,6 +95,10 @@ flutter_launcher_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
+  config:
+    # Desabilita SPM para evitar conflito: google_mobile_ads usa CocoaPods,
+    # webview_flutter_wkwebview usa SPM. Usar apenas CocoaPods resolve o erro.
+    enable-swift-package-manager: false
   generate: true
 
   # The following line ensures that the Material Icons font is

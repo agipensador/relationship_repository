@@ -11,3 +11,15 @@
 - [ ] Jogos devem ser funcionalidades de "Em breve"
 - [ ] Implementar chat conforme TODO_CHAT.md (backend AWS, multimodal, áudio, chamadas, IA)
 - [ ] As fotos/documentos/links adicionadas no chat devem estar em CHIPS, como o WhatsApp (quando clica no usuário ou em ícone três pontinhos, deve carregar mais opções)
+
+---
+
+## iOS: google_mobile_ads + webview_flutter_wkwebview
+
+- [ ] **Resolver conflito CocoaPods vs Swift Package Manager**  
+  O `google_mobile_ads` usa CocoaPods enquanto o `webview_flutter_wkwebview` usa Swift Package Manager.  
+  **Status atual:** SPM desabilitado no `pubspec.yaml` (`enable-swift-package-manager: false`) para usar apenas CocoaPods.  
+  **A fazer:**  
+  - Acompanhar quando o `google_mobile_ads` passar a suportar Swift Package Manager ([issue #1239](https://github.com/googleads/googleads-mobile-flutter/issues/1239)).  
+  - Remover `enable-swift-package-manager: false` assim que o conflito for resolvido (versões futuras do Flutter podem não permitir desabilitar SPM).  
+  - Avaliar atualizar `google_mobile_ads` ou `webview_flutter_wkwebview` quando houver versões compatíveis com ambos os gerenciadores.

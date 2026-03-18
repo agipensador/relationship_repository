@@ -53,17 +53,17 @@ android {
             dimension = "environment"
             // applicationIdSuffix removido: todos os flavors usam o mesmo package para google-services.json
             versionNameSuffix = "-dev"
-            resValue("string", "app_name", "Love Relationship (DEV)")
+            resValue("string", "app_name", "\"A2\" (DEV)")
         }
         create("qa") {
             dimension = "environment"
             // applicationIdSuffix removido: todos os flavors usam o mesmo package para google-services.json
             versionNameSuffix = "-qa"
-            resValue("string", "app_name", "Love Relationship (QA)")
+            resValue("string", "app_name", "\"A2\" (QA)")
         }
         create("prod") {
             dimension = "environment"
-            resValue("string", "app_name", "Love Relationship")
+            resValue("string", "app_name", "\"A2\"")
         }
     }
 
