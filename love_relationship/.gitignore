@@ -46,3 +46,6 @@ app.*.map.json
 
 # FVM - ignora o symlink do SDK, mantém fvm_config.json versionado
 .fvm/flutter_sdk
+
+# Documentação interna (funcionalidades, afazeres)
+FUNCIONALIDADES.md
